@@ -34,26 +34,26 @@
  */
 package net.sourceforge.plantuml;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import net.sourceforge.plantuml.security.SFile;
-
 public class AFileRegular implements AFile {
 
-	private final SFile file;
+	private final File file;
 
 	@Override
 	public String toString() {
-		return "AFileRegular::" + file.getAbsolutePath();
+		return "AFileRegular::" + file;
 	}
 
-	public AFileRegular(SFile file) {
+	public AFileRegular(File file) {
 		this.file = file;
 	}
 
-	public InputStream openFile() {
-		return file.openFile();
+	public InputStream open() throws IOException {
+		return new FileInputStream(file);
 	}
 
 	public boolean isOk() {
@@ -77,11 +77,11 @@ public class AFileRegular implements AFile {
 		return new AParentFolderRegular(file.getParentFile());
 	}
 
-	public SFile getUnderlyingFile() {
+	public File getUnderlyingFile() {
 		return file;
 	}
 
-	public SFile getSystemFolder() throws IOException {
+	public File getSystemFolder() throws IOException {
 		return file.getParentFile().getCanonicalFile();
 	}
 

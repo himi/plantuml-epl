@@ -35,6 +35,7 @@
 package net.sourceforge.plantuml.classdiagram.command;
 
 import net.sourceforge.plantuml.LineLocation;
+import net.sourceforge.plantuml.OptionFlags;
 import net.sourceforge.plantuml.StringUtils;
 import net.sourceforge.plantuml.UmlDiagramType;
 import net.sourceforge.plantuml.command.CommandExecutionResult;

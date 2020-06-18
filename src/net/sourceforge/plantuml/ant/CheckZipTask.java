@@ -34,9 +34,9 @@
  */
 package net.sourceforge.plantuml.ant;
 
-import java.io.FileNotFoundException;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,9 +47,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileList;
 import org.apache.tools.ant.types.FileSet;
-
-import net.sourceforge.plantuml.security.SFile;
-import net.sourceforge.plantuml.security.SecurityUtils;
 
 public class CheckZipTask extends Task {
 
@@ -78,7 +75,7 @@ public class CheckZipTask extends Task {
 		myLog("Check " + zipfile);
 
 		try {
-			loadZipFile(new SFile(zipfile));
+			loadZipFile(new File(zipfile));
 			for (FileList fileList : filelists) {
 				manageFileList(fileList);
 			}
@@ -108,15 +105,11 @@ public class CheckZipTask extends Task {
 
 	private final List<String> entries = new ArrayList<String>();
 
-	private void loadZipFile(SFile file) throws IOException {
+	private void loadZipFile(File file) throws IOException {
 
 		this.entries.clear();
-		final PrintWriter pw = SecurityUtils.createPrintWriter("tmp.txt");
-		final InputStream tmp = file.openFile();
-		if (tmp == null) {
-			throw new FileNotFoundException();
-		}
-		final ZipInputStream zis = new ZipInputStream(tmp);
+		final PrintWriter pw = new PrintWriter("tmp.txt");
+		final ZipInputStream zis = new ZipInputStream(new FileInputStream(file));
 		ZipEntry ze = zis.getNextEntry();
 
 		while (ze != null) {

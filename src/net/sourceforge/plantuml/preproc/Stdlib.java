@@ -37,6 +37,7 @@ package net.sourceforge.plantuml.preproc;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -56,7 +57,6 @@ import java.util.regex.Pattern;
 
 import net.sourceforge.plantuml.Log;
 import net.sourceforge.plantuml.brotli.BrotliInputStream;
-import net.sourceforge.plantuml.security.SFile;
 
 public class Stdlib {
 
@@ -284,9 +284,9 @@ public class Stdlib {
 				if (filename.equals(SEPARATOR)) {
 					return;
 				}
-				final SFile f = new SFile("stdlib/" + name + "/" + filename + ".puml");
+				final File f = new File("stdlib/" + name + "/" + filename + ".puml");
 				f.getParentFile().mkdirs();
-				final PrintWriter fos = f.createPrintWriter();
+				final PrintWriter fos = new PrintWriter(f);
 				while (true) {
 					final String s = dataStream.readUTF();
 					if (s.equals(SEPARATOR)) {

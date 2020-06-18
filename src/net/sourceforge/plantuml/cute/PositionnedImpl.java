@@ -35,6 +35,8 @@
 package net.sourceforge.plantuml.cute;
 
 import net.sourceforge.plantuml.graphic.UDrawable;
+import net.sourceforge.plantuml.ugraphic.UChangeBackColor;
+import net.sourceforge.plantuml.ugraphic.UChangeColor;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.UTranslate;
 import net.sourceforge.plantuml.ugraphic.color.HColor;
@@ -81,7 +83,7 @@ public class PositionnedImpl implements Positionned {
 	}
 
 	private UGraphic applyColor(UGraphic ug) {
-		return ug.apply(color.bg()).apply(color);
+		return ug.apply(new UChangeBackColor(color)).apply(new UChangeColor(color));
 
 	}
 

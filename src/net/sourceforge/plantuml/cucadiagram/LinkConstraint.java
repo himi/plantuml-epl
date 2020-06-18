@@ -42,6 +42,7 @@ import net.sourceforge.plantuml.ISkinParam;
 import net.sourceforge.plantuml.graphic.FontConfiguration;
 import net.sourceforge.plantuml.graphic.HorizontalAlignment;
 import net.sourceforge.plantuml.graphic.TextBlock;
+import net.sourceforge.plantuml.ugraphic.UChangeColor;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.ULine;
 import net.sourceforge.plantuml.ugraphic.UStroke;
@@ -84,7 +85,7 @@ public class LinkConstraint {
 		if (x2 == 0 && y2 == 0) {
 			return;
 		}
-		ug = ug.apply(HColorUtils.BLACK);
+		ug = ug.apply(new UChangeColor(HColorUtils.BLACK));
 //		ug.apply(new UTranslate(x1, y1)).draw(new URectangle(10, 10));
 //		ug.apply(new UTranslate(x2, y2)).draw(new URectangle(10, 10));
 

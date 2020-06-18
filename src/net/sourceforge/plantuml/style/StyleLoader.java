@@ -34,6 +34,8 @@
  */
 package net.sourceforge.plantuml.style;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -53,7 +55,6 @@ import net.sourceforge.plantuml.command.BlocLines;
 import net.sourceforge.plantuml.command.regex.Matcher2;
 import net.sourceforge.plantuml.command.regex.MyPattern;
 import net.sourceforge.plantuml.command.regex.Pattern2;
-import net.sourceforge.plantuml.security.SFile;
 
 public class StyleLoader {
 
@@ -69,16 +70,16 @@ public class StyleLoader {
 		this.styleBuilder = new StyleBuilder(skinParam);
 
 		InputStream internalIs = null;
-		SFile localFile = new SFile(filename);
+		File localFile = new File(filename);
 		Log.info("Trying to load style " + filename);
 		if (localFile.exists() == false) {
 			localFile = FileSystem.getInstance().getFile(filename);
 		}
 		if (localFile.exists()) {
-			Log.info("File found : " + localFile.getPrintablePath());
-			internalIs = localFile.openFile();
+			Log.info("File found : " + localFile.getAbsolutePath());
+			internalIs = new FileInputStream(localFile);
 		} else {
-			Log.info("File not found : " + localFile.getPrintablePath());
+			Log.info("File not found : " + localFile.getAbsolutePath());
 			final String res = "/skin/" + filename;
 			internalIs = StyleLoader.class.getResourceAsStream(res);
 			if (internalIs != null) {
@@ -143,7 +144,7 @@ public class StyleLoader {
 			if (mPropertyAndValue.find()) {
 				final PName key = PName.getFromName(mPropertyAndValue.group(1));
 				final String value = mPropertyAndValue.group(2);
-				if (key != null && maps.size() > 0) {
+				if (key != null) {
 					maps.get(maps.size() - 1).put(key, new ValueImpl(value, counter));
 				}
 				continue;

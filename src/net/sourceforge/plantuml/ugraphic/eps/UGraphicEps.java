@@ -131,7 +131,7 @@ public class UGraphicEps extends AbstractUGraphic<EpsGraphics> implements ClipCo
 		getGraphicObject().openLink(url.getUrl());
 	}
 
-	public void closeUrl() {
+	public void closeAction() {
 		getGraphicObject().closeLink();
 	}
 

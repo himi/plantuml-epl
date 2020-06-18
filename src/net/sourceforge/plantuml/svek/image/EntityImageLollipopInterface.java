@@ -51,6 +51,8 @@ import net.sourceforge.plantuml.graphic.StringBounder;
 import net.sourceforge.plantuml.graphic.TextBlock;
 import net.sourceforge.plantuml.svek.AbstractEntityImage;
 import net.sourceforge.plantuml.svek.ShapeType;
+import net.sourceforge.plantuml.ugraphic.UChangeBackColor;
+import net.sourceforge.plantuml.ugraphic.UChangeColor;
 import net.sourceforge.plantuml.ugraphic.UEllipse;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.UStroke;
@@ -87,8 +89,8 @@ public class EntityImageLollipopInterface extends AbstractEntityImage {
 			}
 		}
 		ug = ug.apply(
-				SkinParamUtils.getColor(getSkinParam(), getStereo(), ColorParam.classBackground).bg())
-				.apply(SkinParamUtils.getColor(getSkinParam(), getStereo(), ColorParam.classBorder));
+				new UChangeBackColor(SkinParamUtils.getColor(getSkinParam(), getStereo(), ColorParam.classBackground)))
+				.apply(new UChangeColor(SkinParamUtils.getColor(getSkinParam(), getStereo(), ColorParam.classBorder)));
 		if (url != null) {
 			ug.startUrl(url);
 		}
@@ -102,7 +104,7 @@ public class EntityImageLollipopInterface extends AbstractEntityImage {
 		final double y = SIZE;
 		desc.drawU(ug.apply(new UTranslate(x, y)));
 		if (url != null) {
-			ug.closeUrl();
+			ug.closeAction();
 		}
 	}
 

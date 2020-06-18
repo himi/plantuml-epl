@@ -38,9 +38,5 @@ import java.awt.Color;
 
 public interface ColorMapper {
 
-	public Color toColor(HColor color);
-
-	public String toSvg(HColor color);
-
-	public String toRGB(HColor color);
+	Color getMappedColor(HColor color);
 }

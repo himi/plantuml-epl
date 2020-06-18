@@ -48,7 +48,6 @@ import net.sourceforge.plantuml.ugraphic.UShape;
 import net.sourceforge.plantuml.ugraphic.color.ColorMapper;
 import net.sourceforge.plantuml.ugraphic.color.HColor;
 import net.sourceforge.plantuml.ugraphic.color.HColorGradient;
-import net.sourceforge.plantuml.ugraphic.color.HColorUtils;
 
 public class DriverPolygonG2d extends DriverShadowedG2d implements UDriver<Graphics2D> {
 
@@ -67,67 +66,62 @@ public class DriverPolygonG2d extends DriverShadowedG2d implements UDriver<Graph
 
 		final GeneralPath path = new GeneralPath();
 
-		final HColor back = param.getBackcolor();
-
-		Point2D.Double last = null;
+		boolean first = true;
 		for (Point2D pt : shape.getPoints()) {
 			final double xp = pt.getX() + x;
 			final double yp = pt.getY() + y;
 			visible.ensureVisible(xp, yp);
-			if (last == null) {
+			if (first) {
 				path.moveTo((float) xp, (float) yp);
 			} else {
 				path.lineTo((float) xp, (float) yp);
 			}
-			last = new Point2D.Double(xp, yp);
+			first = false;
 		}
 
-		if (last != null) {
+		if (first == false) {
 			path.closePath();
 		}
 
 		if (shape.getDeltaShadow() != 0) {
-			if (HColorUtils.isTransparent(back)) {
-				drawOnlyLineShadowSpecial(g2d, path, shape.getDeltaShadow(), dpiFactor);
-			} else {
-				drawShadow(g2d, path, shape.getDeltaShadow(), dpiFactor);
-			}
+			drawShadow(g2d, path, shape.getDeltaShadow(), dpiFactor);
 		}
 
+		final HColor back = param.getBackcolor();
 		if (back instanceof HColorGradient) {
 			final HColorGradient gr = (HColorGradient) back;
 			final char policy = gr.getPolicy();
 			final GradientPaint paint;
+//			final Rectangle2D bound = path.getBounds();
 			if (policy == '|') {
-				paint = new GradientPaint((float) x, (float) (y + shape.getHeight()) / 2,
-						mapper.toColor(gr.getColor1()), (float) (x + shape.getWidth()),
-						(float) (y + shape.getHeight()) / 2, mapper.toColor(gr.getColor2()));
+				paint = new GradientPaint((float) x, (float) (y + shape.getHeight()) / 2, mapper.getMappedColor(gr
+						.getColor1()), (float) (x + shape.getWidth()), (float) (y + shape.getHeight()) / 2,
+						mapper.getMappedColor(gr.getColor2()));
 			} else if (policy == '\\') {
-				paint = new GradientPaint((float) x, (float) (y + shape.getHeight()), mapper.toColor(gr.getColor1()),
-						(float) (x + shape.getWidth()), (float) y, mapper.toColor(gr.getColor2()));
+				paint = new GradientPaint((float) x, (float) (y + shape.getHeight()), mapper.getMappedColor(gr
+						.getColor1()), (float) (x + shape.getWidth()), (float) y, mapper.getMappedColor(gr.getColor2()));
 			} else if (policy == '-') {
-				paint = new GradientPaint((float) (x + shape.getWidth()) / 2, (float) y, mapper.toColor(gr.getColor1()),
-						(float) (x + shape.getWidth()) / 2, (float) (y + shape.getHeight()),
-						mapper.toColor(gr.getColor2()));
+				paint = new GradientPaint((float) (x + shape.getWidth()) / 2, (float) y, mapper.getMappedColor(gr
+						.getColor1()), (float) (x + shape.getWidth()) / 2, (float) (y + shape.getHeight()),
+						mapper.getMappedColor(gr.getColor2()));
 			} else {
 				// for /
-				paint = new GradientPaint((float) x, (float) y, mapper.toColor(gr.getColor1()),
-						(float) (x + shape.getWidth()), (float) (y + shape.getHeight()),
-						mapper.toColor(gr.getColor2()));
+				paint = new GradientPaint((float) x, (float) y, mapper.getMappedColor(gr.getColor1()),
+						(float) (x + shape.getWidth()), (float) (y + shape.getHeight()), mapper.getMappedColor(gr
+								.getColor2()));
 			}
 			g2d.setPaint(paint);
 			g2d.fill(path);
-		} else if (back != null) {
-			g2d.setColor(mapper.toColor(back));
+		} else if (back!=null) {
+			g2d.setColor(mapper.getMappedColor(back));
 			DriverRectangleG2d.managePattern(param, g2d);
 			g2d.fill(path);
 		}
 
 		if (param.getColor() != null) {
-			g2d.setColor(mapper.toColor(param.getColor()));
+			g2d.setColor(mapper.getMappedColor(param.getColor()));
 			DriverLineG2d.manageStroke(param, g2d);
 			g2d.draw(path);
 		}
 	}
-
 }

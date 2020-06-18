@@ -51,11 +51,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import javax.imageio.ImageIO;
 import javax.swing.UIManager;
 
 import net.sourceforge.plantuml.activitydiagram.ActivityDiagramFactory;
 import net.sourceforge.plantuml.classdiagram.ClassDiagramFactory;
-import net.sourceforge.plantuml.code.NoPlantumlCompressionException;
 import net.sourceforge.plantuml.code.Transcoder;
 import net.sourceforge.plantuml.code.TranscoderUtil;
 import net.sourceforge.plantuml.command.UmlDiagramFactory;
@@ -63,9 +63,6 @@ import net.sourceforge.plantuml.descdiagram.DescriptionDiagramFactory;
 import net.sourceforge.plantuml.ftp.FtpServer;
 import net.sourceforge.plantuml.png.MetadataTag;
 import net.sourceforge.plantuml.preproc.Stdlib;
-import net.sourceforge.plantuml.security.ImageIO;
-import net.sourceforge.plantuml.security.SFile;
-import net.sourceforge.plantuml.security.SecurityUtils;
 import net.sourceforge.plantuml.sequencediagram.SequenceDiagramFactory;
 import net.sourceforge.plantuml.sprite.SpriteGrayLevel;
 import net.sourceforge.plantuml.sprite.SpriteUtils;
@@ -80,8 +77,7 @@ public class Run {
 
 	private static Cypher cypher;
 
-	public static void main(String[] argsArray)
-			throws NoPlantumlCompressionException, IOException, InterruptedException {
+	public static void main(String[] argsArray) throws IOException, InterruptedException {
 		System.setProperty("log4j.debug", "false");
 		final long start = System.currentTimeMillis();
 		if (argsArray.length > 0 && argsArray[0].equalsIgnoreCase("-headless")) {
@@ -122,7 +118,6 @@ public class Run {
 			encodeSprite(option.getResult());
 			return;
 		}
-		Log.info("SecurityProfile " + SecurityUtils.getSecurityProfile());
 		if (OptionFlags.getInstance().isVerbose()) {
 			Log.info("PlantUML Version " + Version.versionString());
 			Log.info("GraphicsEnvironment.isHeadless() " + GraphicsEnvironment.isHeadless());
@@ -273,17 +268,13 @@ public class Run {
 		final URL source;
 		final String lowerPath = StringUtils.goLowerCase(path);
 		if (lowerPath.startsWith(httpProtocol) || lowerPath.startsWith(httpsProtocol)) {
-			source = new java.net.URL(path);
+			source = new URL(path);
 			final String p = source.getPath();
 			fileName = p.substring(p.lastIndexOf('/') + 1, p.length());
 		} else {
-			final SFile f = new SFile(path);
+			final File f = new File(path);
 			source = f.toURI().toURL();
 			fileName = f.getName();
-		}
-
-		if (source == null) {
-			return;
 		}
 
 		InputStream stream = null;
@@ -366,16 +357,15 @@ public class Run {
 		new Pipe(option, System.out, System.in, charset).managePipe(error);
 	}
 
-	private static void manageAllFiles(Option option, ErrorStatus error)
-			throws NoPlantumlCompressionException, InterruptedException {
+	private static void manageAllFiles(Option option, ErrorStatus error) throws IOException, InterruptedException {
 
-		SFile lockFile = null;
+		File lockFile = null;
 		try {
 			if (OptionFlags.getInstance().isWord()) {
-				final SFile dir = new SFile(option.getResult().get(0));
-				final SFile javaIsRunningFile = dir.file("javaisrunning.tmp");
+				final File dir = new File(option.getResult().get(0));
+				final File javaIsRunningFile = new File(dir, "javaisrunning.tmp");
 				javaIsRunningFile.delete();
-				lockFile = dir.file("javaumllock.tmp");
+				lockFile = new File(dir, "javaumllock.tmp");
 			}
 			processArgs(option, error);
 		} finally {
@@ -386,8 +376,7 @@ public class Run {
 
 	}
 
-	private static void processArgs(Option option, ErrorStatus error)
-			throws NoPlantumlCompressionException, InterruptedException {
+	private static void processArgs(Option option, ErrorStatus error) throws IOException, InterruptedException {
 		if (option.isDecodeurl() == false && option.getNbThreads() > 1 && option.isCheckOnly() == false
 				&& OptionFlags.getInstance().isExtractFromMetadata() == false) {
 			multithread(option, error);
@@ -469,7 +458,7 @@ public class Run {
 
 	private static void manageFileInternal(File f, Option option, ErrorStatus error)
 			throws IOException, InterruptedException {
-		Log.info("Working on " + f.getPath());
+		Log.info("Working on " + f.getAbsolutePath());
 		if (OptionFlags.getInstance().isExtractFromMetadata()) {
 			System.out.println("------------------------");
 			System.out.println(f);
@@ -477,8 +466,8 @@ public class Run {
 			System.out.println();
 			error.goOk();
 			final String data = new MetadataTag(f, "plantuml").getData();
-			// File file = SecurityUtils.File("tmp.txt");
-			// PrintWriter pw = SecurityUtils.PrintWriter(file, "UTF-8");
+			// File file = new File("tmp.txt");
+			// PrintWriter pw = new PrintWriter(file, "UTF-8");
 			// pw.println(NastyEncoder.fromISO_8859_1(data));
 			// pw.close();
 
@@ -529,7 +518,7 @@ public class Run {
 		final List<GeneratedImage> result = sourceFileReader.getGeneratedImages();
 		final Stdrpt rpt = option.getStdrpt();
 		if (result.size() == 0) {
-			Log.error("Warning: no image in " + f.getPath());
+			Log.error("Warning: no image in " + f.getCanonicalPath());
 			rpt.printInfo(System.err, null);
 			// error.goNoData();
 			return;
@@ -546,9 +535,9 @@ public class Run {
 		for (BlockUml blockUml : sourceFileReader.getBlocks()) {
 			final SuggestedFile suggested = ((SourceFileReaderAbstract) sourceFileReader).getSuggestedFile(blockUml)
 					.withPreprocFormat();
-			final SFile file = suggested.getFile(0);
-			Log.info("Export preprocessing source to " + file.getPrintablePath());
-			final PrintWriter pw = charset == null ? file.createPrintWriter() : file.createPrintWriter(charset);
+			final File file = suggested.getFile(0);
+			Log.info("Export preprocessing source to " + file.getAbsolutePath());
+			final PrintWriter pw = charset == null ? new PrintWriter(file) : new PrintWriter(file, charset);
 			int level = 0;
 			for (CharSequence cs : blockUml.getDefinition(true)) {
 				String s = cs.toString();
@@ -577,7 +566,7 @@ public class Run {
 		for (GeneratedImage i : list) {
 			final int lineError = i.lineErrorRaw();
 			if (lineError != -1) {
-				Log.error("Error line " + lineError + " in file: " + f.getPath());
+				Log.error("Error line " + lineError + " in file: " + f.getCanonicalPath());
 				error.goWithError();
 				return;
 			}

@@ -36,7 +36,7 @@ package net.sourceforge.plantuml.ugraphic.color;
 
 import java.awt.Color;
 
-public class ColorMapperTransparentWrapper extends AbstractColorMapper implements ColorMapper {
+public class ColorMapperTransparentWrapper implements ColorMapper {
 
 	private final ColorMapper mapper;
 
@@ -47,15 +47,14 @@ public class ColorMapperTransparentWrapper extends AbstractColorMapper implement
 		this.mapper = mapper;
 	}
 
-	public Color toColor(HColor color) {
+	public Color getMappedColor(HColor color) {
 		if (color == null) {
 			return null;
 		}
 		if (color instanceof HColorBackground) {
-			final HColor back = ((HColorBackground) color).getBack();
-			return mapper.toColor(back);
+			return ((HColorBackground) color).getActualColor(mapper);
 		}
-		return mapper.toColor(color);
+		return mapper.getMappedColor(color);
 	}
 
 }

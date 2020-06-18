@@ -31,7 +31,6 @@
  * 
  *
  * Original Author:  Arnaud Roques
- * Contribution :  Hisashi Miyashita
  */
 package net.sourceforge.plantuml.cucadiagram;
 
@@ -49,7 +48,6 @@ import net.sourceforge.plantuml.ugraphic.URectangle;
 import net.sourceforge.plantuml.ugraphic.UTranslate;
 
 public enum EntityPosition {
-
 	NORMAL, ENTRY_POINT, EXIT_POINT, INPUT_PIN, OUTPUT_PIN, EXPANSION_INPUT, EXPANSION_OUTPUT, PORT, PORTIN, PORTOUT;
 
 	public static final double RADIUS = 6;
@@ -161,9 +159,4 @@ public enum EntityPosition {
 	public static EnumSet<EntityPosition> getSame() {
 		return EnumSet.of(PORT);
 	}
-
-	public boolean isPort() {
-		return this == PORT || this == PORTIN || this == PORTOUT;
-	}
-
 }

@@ -43,13 +43,10 @@ public class SvgString {
 	private final double scale;
 
 	public SvgString(String svg, double scale) {
-		if (svg == null) {
-			throw new IllegalArgumentException();
-		}
 		this.svg = svg;
 		this.scale = scale;
 	}
-
+	
 	public String getMD5Hex() {
 		return SignatureUtils.getMD5Hex(svg);
 	}

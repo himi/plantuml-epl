@@ -36,6 +36,7 @@ package net.sourceforge.plantuml.ugraphic.svg;
 
 import java.awt.geom.Line2D;
 
+import net.sourceforge.plantuml.StringUtils;
 import net.sourceforge.plantuml.svg.SvgGraphics;
 import net.sourceforge.plantuml.ugraphic.ClipContainer;
 import net.sourceforge.plantuml.ugraphic.UClip;
@@ -81,9 +82,9 @@ public class DriverLineSvg implements UDriver<SvgGraphics> {
 		final HColor color = param.getColor();
 		if (color instanceof HColorGradient) {
 			final HColorGradient gr = (HColorGradient) color;
-			svg.setStrokeColor(mapper.toSvg(gr.getColor1()));
+			svg.setStrokeColor(StringUtils.getAsSvg(mapper, gr.getColor1()));
 		} else {
-			svg.setStrokeColor(mapper.toSvg(color));
+			svg.setStrokeColor(StringUtils.getAsSvg(mapper, color));
 		}
 		svg.setStrokeWidth(param.getStroke().getThickness(), param.getStroke().getDasharraySvg());
 		svg.svgLine(x, y, x2, y2, shape.getDeltaShadow());

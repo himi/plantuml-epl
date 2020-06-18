@@ -43,6 +43,8 @@ import net.sourceforge.plantuml.graphic.TextBlock;
 import net.sourceforge.plantuml.project.lang.ComplementColors;
 import net.sourceforge.plantuml.project.time.Wink;
 import net.sourceforge.plantuml.project.timescale.TimeScale;
+import net.sourceforge.plantuml.ugraphic.UChangeBackColor;
+import net.sourceforge.plantuml.ugraphic.UChangeColor;
 import net.sourceforge.plantuml.ugraphic.UFont;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.UPolygon;
@@ -84,7 +86,7 @@ public class TaskDrawDiamond extends AbstractTaskDraw {
 		if (colors != null && colors.isOk()) {
 			return colors.apply(ug);
 		}
-		return ug.apply(HColorUtils.BLACK).apply(HColorUtils.BLACK.bg());
+		return ug.apply(new UChangeColor(HColorUtils.BLACK)).apply(new UChangeBackColor(HColorUtils.BLACK));
 	}
 
 	private void drawShape(UGraphic ug) {

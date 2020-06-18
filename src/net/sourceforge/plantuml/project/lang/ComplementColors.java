@@ -34,6 +34,8 @@
  */
 package net.sourceforge.plantuml.project.lang;
 
+import net.sourceforge.plantuml.ugraphic.UChangeBackColor;
+import net.sourceforge.plantuml.ugraphic.UChangeColor;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.color.HColor;
 
@@ -51,11 +53,11 @@ public class ComplementColors implements Complement {
 		if (isOk() == false) {
 			throw new IllegalStateException();
 		}
-		ug = ug.apply(center.bg());
+		ug = ug.apply(new UChangeBackColor(center));
 		if (border == null) {
-			ug = ug.apply(center);
+			ug = ug.apply(new UChangeColor(center));
 		} else {
-			ug = ug.apply(border);
+			ug = ug.apply(new UChangeColor(border));
 		}
 		return ug;
 	}

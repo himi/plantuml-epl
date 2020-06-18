@@ -43,8 +43,6 @@ import net.sourceforge.plantuml.FileFormatOption;
 import net.sourceforge.plantuml.core.DiagramDescription;
 import net.sourceforge.plantuml.core.ImageData;
 import net.sourceforge.plantuml.graphic.UDrawable;
-import net.sourceforge.plantuml.ugraphic.AffineTransformType;
-import net.sourceforge.plantuml.ugraphic.PixelImage;
 import net.sourceforge.plantuml.ugraphic.ImageBuilder;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.UImage;
@@ -63,12 +61,12 @@ public class PSystemCharlie extends AbstractPSystem {
 	@Override
 	final protected ImageData exportDiagramNow(OutputStream os, int num, FileFormatOption fileFormat, long seed)
 			throws IOException {
-		final ImageBuilder imageBuilder = ImageBuilder.buildA(new ColorMapperIdentity(), false, null, getMetadata(),
-				null, 1.0, HColorUtils.BLACK);
+		final ImageBuilder imageBuilder = new ImageBuilder(new ColorMapperIdentity(), 1.0, HColorUtils.BLACK,
+				getMetadata(), null, 0, 0, null, false);
 		imageBuilder.setUDrawable(new UDrawable() {
 
 			public void drawU(UGraphic ug) {
-				final UImage im = new UImage(new PixelImage(image, AffineTransformType.TYPE_BILINEAR));
+				final UImage im = new UImage(image);
 				ug.draw(im);
 			}
 		});

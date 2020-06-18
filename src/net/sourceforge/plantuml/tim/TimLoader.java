@@ -63,7 +63,7 @@ public class TimLoader {
 	public Set<FileWithSuffix> load(List<StringLocated> list) {
 //		CodeIteratorImpl.indentNow(list);
 		try {
-			context.executeLines(global, list, null, false);
+			context.executeLines(global, list, null);
 		} catch (EaterExceptionLocated e) {
 			context.getResultList().add(e.getLocation().withErrorPreprocessor(e.getMessage()));
 			changeLastLine(context.getDebug(), e.getMessage());

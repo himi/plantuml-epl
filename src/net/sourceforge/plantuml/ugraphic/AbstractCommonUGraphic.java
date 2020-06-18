@@ -34,11 +34,9 @@
  */
 package net.sourceforge.plantuml.ugraphic;
 
-import net.sourceforge.plantuml.Url;
 import net.sourceforge.plantuml.ugraphic.color.ColorMapper;
 import net.sourceforge.plantuml.ugraphic.color.ColorMapperTransparentWrapper;
 import net.sourceforge.plantuml.ugraphic.color.HColor;
-import net.sourceforge.plantuml.ugraphic.color.HColorNone;
 
 public abstract class AbstractCommonUGraphic implements UGraphic {
 
@@ -60,9 +58,6 @@ public abstract class AbstractCommonUGraphic implements UGraphic {
 	}
 
 	public UGraphic apply(UChange change) {
-		if (change == null) {
-			throw new IllegalArgumentException();
-		}
 		final AbstractCommonUGraphic copy = copyUGraphic();
 		if (change instanceof UTranslate) {
 			copy.translate = ((UTranslate) change).scaled(scale).compose(copy.translate);
@@ -75,12 +70,10 @@ public abstract class AbstractCommonUGraphic implements UGraphic {
 			copy.pattern = (UPattern) change;
 		} else if (change instanceof UHidden) {
 			copy.hidden = change == UHidden.HIDDEN;
-		} else if (change instanceof UBackground) {
-			copy.backColor = ((UBackground) change).getBackColor();
-		} else if (change instanceof HColorNone) {
-			copy.color = null;
-		} else if (change instanceof HColor) {
-			copy.color = (HColor) change;
+		} else if (change instanceof UChangeBackColor) {
+			copy.backColor = ((UChangeBackColor) change).getBackColor();
+		} else if (change instanceof UChangeColor) {
+			copy.color = ((UChangeColor) change).getColor();
 		} else if (change instanceof UScale) {
 			final double factor = ((UScale) change).getScale();
 			copy.scale = scale * factor;
@@ -160,19 +153,8 @@ public abstract class AbstractCommonUGraphic implements UGraphic {
 		return new ColorMapperTransparentWrapper(colorMapper);
 	}
 
-	final public void flushUg() {
-	}
+	public void flushUg() {
 
-	public void startUrl(Url url) {
-	}
-
-	public void closeUrl() {
-	}
-
-	public void startGroup(String groupId) {
-	}
-
-	public void closeGroup() {
 	}
 
 	public boolean matchesProperty(String propertyName) {

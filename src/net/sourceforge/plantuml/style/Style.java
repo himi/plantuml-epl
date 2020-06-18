@@ -49,11 +49,11 @@ import net.sourceforge.plantuml.graphic.TextBlock;
 import net.sourceforge.plantuml.graphic.TextBlockUtils;
 import net.sourceforge.plantuml.graphic.color.ColorType;
 import net.sourceforge.plantuml.graphic.color.Colors;
+import net.sourceforge.plantuml.ugraphic.UChangeColor;
 import net.sourceforge.plantuml.ugraphic.UFont;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.UStroke;
 import net.sourceforge.plantuml.ugraphic.color.HColor;
-import net.sourceforge.plantuml.ugraphic.color.HColorNone;
 import net.sourceforge.plantuml.ugraphic.color.HColorSet;
 
 public class Style {
@@ -94,8 +94,7 @@ public class Style {
 		// if (this.name.equals(other.name)) {
 		// return new Style(this.kind.add(other.kind), this.name, both);
 		// }
-		// return new Style(this.kind.add(other.kind), this.name + "," + other.name,
-		// both);
+		// return new Style(this.kind.add(other.kind), this.name + "," + other.name, both);
 	}
 
 	public Style eventuallyOverride(PName param, HColor color) {
@@ -185,13 +184,13 @@ public class Style {
 	}
 
 	public ClockwiseTopRightBottomLeft getPadding() {
-		final String padding = value(PName.Padding).asString();
-		return ClockwiseTopRightBottomLeft.read(padding);
+		final double padding = value(PName.Padding).asDouble();
+		return new ClockwiseTopRightBottomLeft(padding);
 	}
 
 	public ClockwiseTopRightBottomLeft getMargin() {
-		final String margin = value(PName.Margin).asString();
-		return ClockwiseTopRightBottomLeft.read(margin);
+		final double padding = value(PName.Margin).asDouble();
+		return new ClockwiseTopRightBottomLeft(padding);
 	}
 
 	public HorizontalAlignment getHorizontalAlignment() {
@@ -213,20 +212,16 @@ public class Style {
 		final HColor legendColor = this.value(PName.LineColor).asColor(set);
 		final UStroke stroke = this.getStroke();
 		final int cornersize = this.value(PName.RoundCorner).asInt();
-		final ClockwiseTopRightBottomLeft margin = this.getMargin();
-		final ClockwiseTopRightBottomLeft padding = this.getPadding();
+		final double margin = this.value(PName.Margin).asDouble();
+		final double padding = this.value(PName.Padding).asDouble();
+
 		final TextBlock result = TextBlockUtils.bordered(textBlock, stroke, legendColor, legendBackgroundColor,
-				cornersize, padding);
-		return TextBlockUtils.withMargin(result, margin);
+				cornersize, padding, padding);
+		return TextBlockUtils.withMargin(result, margin, margin);
 	}
 
 	public UGraphic applyStrokeAndLineColor(UGraphic ug, HColorSet colorSet) {
-		final HColor color = value(PName.LineColor).asColor(colorSet);
-		if (color == null) {
-			ug = ug.apply(new HColorNone());
-		} else {
-			ug = ug.apply(color);
-		}
+		ug = ug.apply(new UChangeColor(value(PName.LineColor).asColor(colorSet)));
 		ug = ug.apply(getStroke());
 		return ug;
 	}

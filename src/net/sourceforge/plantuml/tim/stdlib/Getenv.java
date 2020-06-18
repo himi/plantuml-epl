@@ -35,13 +35,10 @@
 package net.sourceforge.plantuml.tim.stdlib;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import net.sourceforge.plantuml.LineLocation;
 import net.sourceforge.plantuml.OptionFlags;
 import net.sourceforge.plantuml.tim.EaterException;
-import net.sourceforge.plantuml.tim.EaterExceptionLocated;
 import net.sourceforge.plantuml.tim.TContext;
 import net.sourceforge.plantuml.tim.TFunctionSignature;
 import net.sourceforge.plantuml.tim.TMemory;
@@ -53,16 +50,15 @@ public class Getenv extends SimpleReturnFunction {
 		return new TFunctionSignature("%getenv", 1);
 	}
 
-	public boolean canCover(int nbArg, Set<String> namedArgument) {
+	public boolean canCover(int nbArg) {
 		return nbArg == 1;
 	}
 
-	public TValue executeReturnFunction(TContext context, TMemory memory, LineLocation location, List<TValue> values,
-			Map<String, TValue> named) throws EaterException, EaterExceptionLocated {
+	public TValue executeReturn(TContext context, TMemory memory, LineLocation location, List<TValue> args) throws EaterException {
 		if (OptionFlags.ALLOW_INCLUDE == false) {
 			return TValue.fromString("");
 		}
-		final String name = values.get(0).toString();
+		final String name = args.get(0).toString();
 		final String value = getenv(name);
 		if (value == null) {
 			return TValue.fromString("");

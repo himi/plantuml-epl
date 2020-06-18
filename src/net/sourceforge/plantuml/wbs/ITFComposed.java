@@ -57,7 +57,7 @@ class ITFComposed extends WBSTextBlock implements ITF {
 	private final TextBlock main;
 
 	final private double delta1x = 10;
-	final private double marginBottom;// = 15;
+	final private double deltay;// = 15;
 
 	private ITFComposed(ISkinParam skinParam, WElement idea, List<ITF> left, List<ITF> right) {
 		super(skinParam, idea.getStyleBuilder(), idea.getLevel());
@@ -65,7 +65,7 @@ class ITFComposed extends WBSTextBlock implements ITF {
 		this.right = right;
 		this.main = buildMain(idea);
 		final Style style = idea.getStyle();
-		this.marginBottom = style.getMargin().getBottom();
+		this.deltay = style.getMargin().asDouble();
 	}
 
 	public static ITF build2(ISkinParam skinParam, WElement idea) {
@@ -120,7 +120,7 @@ class ITFComposed extends WBSTextBlock implements ITF {
 		final Dimension2D mainDim = main.calculateDimension(stringBounder);
 		final double mainWidth = mainDim.getWidth();
 		final double height = mainDim.getHeight()
-				+ Math.max(getCollHeight(stringBounder, left, marginBottom), getCollHeight(stringBounder, right, marginBottom));
+				+ Math.max(getCollHeight(stringBounder, left, deltay), getCollHeight(stringBounder, right, deltay));
 		final double width = Math.max(mainWidth / 2, delta1x + getCollWidth(stringBounder, left))
 				+ Math.max(mainWidth / 2, delta1x + getCollWidth(stringBounder, right));
 		return new Dimension2DDouble(width, height);
@@ -135,7 +135,7 @@ class ITFComposed extends WBSTextBlock implements ITF {
 		double y = mainDim.getHeight();
 		double lastY1 = y;
 		for (ITF child : left) {
-			y += marginBottom;
+			y += deltay;
 			final Dimension2D childDim = child.calculateDimension(stringBounder);
 			lastY1 = y + child.getF2(stringBounder).getY();
 			drawLine(ug, x - childDim.getWidth() - delta1x + child.getF2(stringBounder).getX(), lastY1, x, lastY1);
@@ -146,7 +146,7 @@ class ITFComposed extends WBSTextBlock implements ITF {
 		y = mainDim.getHeight();
 		double lastY2 = y;
 		for (ITF child : right) {
-			y += marginBottom;
+			y += deltay;
 			final Dimension2D childDim = child.calculateDimension(stringBounder);
 			lastY2 = y + child.getF1(stringBounder).getY();
 			drawLine(ug, x, lastY2, x + delta1x + child.getF1(stringBounder).getX(), lastY2);

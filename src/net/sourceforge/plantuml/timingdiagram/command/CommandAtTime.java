@@ -40,7 +40,6 @@ import net.sourceforge.plantuml.command.SingleLineCommand2;
 import net.sourceforge.plantuml.command.regex.IRegex;
 import net.sourceforge.plantuml.command.regex.RegexConcat;
 import net.sourceforge.plantuml.command.regex.RegexLeaf;
-import net.sourceforge.plantuml.command.regex.RegexOptional;
 import net.sourceforge.plantuml.command.regex.RegexResult;
 import net.sourceforge.plantuml.timingdiagram.TimeTick;
 import net.sourceforge.plantuml.timingdiagram.TimingDiagram;
@@ -54,13 +53,6 @@ public class CommandAtTime extends SingleLineCommand2<TimingDiagram> {
 	private static IRegex getRegexConcat() {
 		return RegexConcat.build(CommandAtTime.class.getName(), RegexLeaf.start(), //
 				TimeTickBuilder.expressionAtWithArobase("TIME"), //
-				new RegexOptional(new RegexConcat( //
-						RegexLeaf.spaceOneOrMore(), //
-						new RegexLeaf("as"), //
-						RegexLeaf.spaceOneOrMore(), //
-						new RegexLeaf(":"), //
-						new RegexLeaf("CODE", "([\\p{L}0-9_.]+)") //
-				)), //
 				RegexLeaf.spaceZeroOrMore(), //
 				RegexLeaf.end());
 	}
@@ -71,8 +63,7 @@ public class CommandAtTime extends SingleLineCommand2<TimingDiagram> {
 		if (timeTick == null) {
 			return CommandExecutionResult.error("What time?");
 		}
-		final String code = arg.get("CODE", 0);
-		diagram.addTime(timeTick, code);
+		diagram.addTime(timeTick);
 		return CommandExecutionResult.ok();
 	}
 

@@ -36,6 +36,7 @@ package net.sourceforge.plantuml.svek.extremity;
 
 import java.awt.geom.Point2D;
 
+import net.sourceforge.plantuml.ugraphic.UChangeBackColor;
 import net.sourceforge.plantuml.ugraphic.UEllipse;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.UStroke;
@@ -60,7 +61,7 @@ class MiddleCircle extends Extremity {
 
 
 	public void drawU(UGraphic ug) {
-		ug.apply(backColor.bg()).apply(new UStroke(1.5)).apply(new UTranslate(-radius, -radius)).draw(circle);
+		ug.apply(new UChangeBackColor(backColor)).apply(new UStroke(1.5)).apply(new UTranslate(-radius, -radius)).draw(circle);
 	}
 
 }

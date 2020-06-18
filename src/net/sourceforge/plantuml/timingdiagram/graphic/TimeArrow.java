@@ -44,6 +44,8 @@ import net.sourceforge.plantuml.graphic.FontConfiguration;
 import net.sourceforge.plantuml.graphic.HorizontalAlignment;
 import net.sourceforge.plantuml.graphic.TextBlock;
 import net.sourceforge.plantuml.graphic.UDrawable;
+import net.sourceforge.plantuml.ugraphic.UChangeBackColor;
+import net.sourceforge.plantuml.ugraphic.UChangeColor;
 import net.sourceforge.plantuml.ugraphic.UFont;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.ULine;
@@ -114,7 +116,7 @@ public class TimeArrow implements UDrawable {
 
 	public void drawU(UGraphic ug) {
 		final double angle = getAngle();
-		ug = ug.apply(type.getSpecificColor()).apply(type.getType().getStroke3(new UStroke()));
+		ug = ug.apply(new UChangeColor(type.getSpecificColor())).apply(type.getType().getStroke3(new UStroke()));
 		final ULine line = new ULine(end.getX() - start.getX(), end.getY() - start.getY());
 		ug.apply(new UTranslate(start)).draw(line);
 
@@ -127,7 +129,7 @@ public class TimeArrow implements UDrawable {
 		polygon.addPoint(pt2.getX(), pt2.getY());
 		polygon.addPoint(end.getX(), end.getY());
 
-		ug = ug.apply(type.getSpecificColor().bg());
+		ug = ug.apply(new UChangeBackColor(type.getSpecificColor()));
 		ug.draw(polygon);
 
 		final TextBlock textLabel = label.create(getFontConfiguration(), HorizontalAlignment.LEFT, spriteContainer);

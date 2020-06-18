@@ -54,8 +54,8 @@ public class CommandMultilinesFooter extends CommandMultilines<TitledDiagram> {
 	}
 
 	public CommandExecutionResult execute(final TitledDiagram diagram, BlocLines lines) {
-		lines = lines.trim();
-		final Matcher2 m = getStartingPattern().matcher(lines.getFirst().getTrimmed().getString());
+		lines = lines.trim(false);
+		final Matcher2 m = getStartingPattern().matcher(lines.getFirst499().getTrimmed().getString());
 		if (m.find() == false) {
 			throw new IllegalStateException();
 		}
@@ -65,7 +65,7 @@ public class CommandMultilinesFooter extends CommandMultilines<TitledDiagram> {
 		if (strings.size() > 0) {
 			HorizontalAlignment ha = HorizontalAlignment.fromString(align, HorizontalAlignment.CENTER);
 			if (SkinParam.USE_STYLES() && align == null) {
-				ha = FontParam.FOOTER.getStyleDefinition(null)
+				ha = FontParam.FOOTER.getStyleDefinition()
 						.getMergedStyle(((UmlDiagram) diagram).getSkinParam().getCurrentStyleBuilder())
 						.getHorizontalAlignment();
 			}

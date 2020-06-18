@@ -42,7 +42,7 @@ public enum ActorStyle {
 
 	STICKMAN, AWESOME;
 
-	public USymbol toUSymbol() {
+	public USymbol getUSymbol() {
 		if (this == STICKMAN) {
 			return USymbol.ACTOR_STICKMAN;
 		} else if (this == AWESOME) {

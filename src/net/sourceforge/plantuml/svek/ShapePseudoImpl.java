@@ -59,8 +59,4 @@ public class ShapePseudoImpl implements IShapePseudo {
 		sb.append("];");
 	}
 
-	public double getMaxWidthFromLabelForEntryExit(StringBounder stringBounder) {
-		throw new UnsupportedOperationException();
-	}
-
 }

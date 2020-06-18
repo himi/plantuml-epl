@@ -37,20 +37,22 @@ package net.sourceforge.plantuml.creole.command;
 import net.sourceforge.plantuml.command.regex.Matcher2;
 import net.sourceforge.plantuml.command.regex.MyPattern;
 import net.sourceforge.plantuml.command.regex.Pattern2;
-import net.sourceforge.plantuml.creole.legacy.StripeSimple;
+import net.sourceforge.plantuml.creole.StripeSimple;
 import net.sourceforge.plantuml.graphic.Splitter;
 import net.sourceforge.plantuml.math.ScientificEquationSafe;
 
 public class CommandCreoleMath implements Command {
 
 	private final Pattern2 pattern;
+	private final double scale;
 
-	private CommandCreoleMath(String p) {
+	private CommandCreoleMath(String p, double scale) {
 		this.pattern = MyPattern.cmpile(p);
+		this.scale = scale;
 	}
 
-	public static Command create() {
-		return new CommandCreoleMath("^(?i)(" + Splitter.mathPattern + ")");
+	public static Command create(double scale) {
+		return new CommandCreoleMath("^(?i)(" + Splitter.mathPattern + ")", scale);
 	}
 
 	public int matchingSize(String line) {
@@ -67,7 +69,7 @@ public class CommandCreoleMath implements Command {
 			throw new IllegalStateException();
 		}
 		final String math = m.group(2);
-		stripe.addMath(ScientificEquationSafe.fromAsciiMath(math));
+		stripe.addMath(ScientificEquationSafe.fromAsciiMath(math), scale);
 		return line.substring(m.group(1).length());
 	}
 

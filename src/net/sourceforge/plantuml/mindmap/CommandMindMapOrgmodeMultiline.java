@@ -34,19 +34,16 @@
  */
 package net.sourceforge.plantuml.mindmap;
 
-import java.util.List;
-
-import net.sourceforge.plantuml.StringUtils;
 import net.sourceforge.plantuml.command.BlocLines;
 import net.sourceforge.plantuml.command.CommandExecutionResult;
 import net.sourceforge.plantuml.command.CommandMultilines2;
 import net.sourceforge.plantuml.command.MultilinesStrategy;
 import net.sourceforge.plantuml.command.regex.IRegex;
-import net.sourceforge.plantuml.command.regex.MyPattern;
 import net.sourceforge.plantuml.command.regex.RegexConcat;
 import net.sourceforge.plantuml.command.regex.RegexLeaf;
 import net.sourceforge.plantuml.command.regex.RegexOptional;
 import net.sourceforge.plantuml.command.regex.RegexResult;
+import net.sourceforge.plantuml.cucadiagram.Display;
 import net.sourceforge.plantuml.ugraphic.color.HColor;
 
 public class CommandMindMapOrgmodeMultiline extends CommandMultilines2<MindMapDiagram> {
@@ -67,34 +64,21 @@ public class CommandMindMapOrgmodeMultiline extends CommandMultilines2<MindMapDi
 
 	@Override
 	public String getPatternEnd() {
-		return "^(.*);(?:\\s*\\<\\<(.+)\\>\\>)?$";
+		return "^(.*);$";
 	}
 
 	@Override
 	protected CommandExecutionResult executeNow(MindMapDiagram diagram, BlocLines lines) {
-		final RegexResult line0 = getStartingPattern().matcher(lines.getFirst().getTrimmed().getString());
-
-		final List<String> lineLast = StringUtils.getSplit(MyPattern.cmpile(getPatternEnd()),
-				lines.getLast().getString());
-		lines = lines.removeStartingAndEnding(line0.get("DATA", 0), 1);
-
-		final String stereotype = lineLast.get(1);
-		if (stereotype != null) {
-			lines = lines.overrideLastLine(lineLast.get(0));
-		}
-
+		final RegexResult line0 = getStartingPattern().matcher(lines.getFirst499().getTrimmed().getString());
 		final String type = line0.get("TYPE", 0);
 		final String stringColor = line0.get("BACKCOLOR", 0);
 		HColor backColor = null;
 		if (stringColor != null) {
 			backColor = diagram.getSkinParam().getIHtmlColorSet().getColorIfValid(stringColor);
 		}
+		lines = lines.removeStartingAndEnding2(line0.get("DATA", 0));
 
-		if (stereotype == null) {
-			return diagram.addIdea(backColor, type.length() - 1, lines.toDisplay(),
-					IdeaShape.fromDesc(line0.get("SHAPE", 0)));
-		}
-		return diagram.addIdea(stereotype, backColor, type.length() - 1, lines.toDisplay(),
+		return diagram.addIdea(backColor, type.length() - 1, lines.toDisplay(),
 				IdeaShape.fromDesc(line0.get("SHAPE", 0)));
 	}
 

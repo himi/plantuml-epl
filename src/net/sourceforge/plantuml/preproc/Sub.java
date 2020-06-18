@@ -45,6 +45,7 @@ import net.sourceforge.plantuml.tim.EaterStartsub;
 import net.sourceforge.plantuml.tim.TContext;
 import net.sourceforge.plantuml.tim.TLineType;
 import net.sourceforge.plantuml.tim.TMemory;
+import net.sourceforge.plantuml.tim.iterator.CodeIteratorImpl;
 
 public class Sub {
 

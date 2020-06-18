@@ -49,6 +49,8 @@ import net.sourceforge.plantuml.activitydiagram3.ftile.Swimlane;
 import net.sourceforge.plantuml.graphic.FontConfiguration;
 import net.sourceforge.plantuml.graphic.StringBounder;
 import net.sourceforge.plantuml.ugraphic.UCenteredCharacter;
+import net.sourceforge.plantuml.ugraphic.UChangeBackColor;
+import net.sourceforge.plantuml.ugraphic.UChangeColor;
 import net.sourceforge.plantuml.ugraphic.UEllipse;
 import net.sourceforge.plantuml.ugraphic.UFont;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
@@ -102,10 +104,10 @@ public class FtileCircleSpot extends AbstractFtile {
 		if (skinParam().shadowing(null)) {
 			circle.setDeltaShadow(3);
 		}
-		ug.apply(borderColor).apply(backColor.bg()).apply(getThickness())
+		ug.apply(new UChangeColor(borderColor)).apply(new UChangeBackColor(backColor)).apply(getThickness())
 				.draw(circle);
 
-		ug.apply(fc.getColor()).apply(new UTranslate(SIZE / 2, SIZE / 2))
+		ug.apply(new UChangeColor(fc.getColor())).apply(new UTranslate(SIZE / 2, SIZE / 2))
 				.draw(new UCenteredCharacter(spot.charAt(0), fc.getFont()));
 
 	}

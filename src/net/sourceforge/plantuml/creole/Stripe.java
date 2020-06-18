@@ -40,8 +40,8 @@ import net.sourceforge.plantuml.creole.atom.Atom;
 
 public interface Stripe {
 
-	public Atom getLHeader();
-
+	public Atom getHeader();
+	
 	public List<Atom> getAtoms();
 
 }

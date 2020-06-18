@@ -51,7 +51,7 @@ import net.sourceforge.plantuml.command.BlocLines;
 import net.sourceforge.plantuml.command.regex.Matcher2;
 import net.sourceforge.plantuml.command.regex.MyPattern;
 import net.sourceforge.plantuml.command.regex.Pattern2;
-import net.sourceforge.plantuml.creole.Parser;
+import net.sourceforge.plantuml.creole.command.CommandCreoleMonospaced;
 import net.sourceforge.plantuml.cucadiagram.LinkStyle;
 import net.sourceforge.plantuml.cucadiagram.Rankdir;
 import net.sourceforge.plantuml.cucadiagram.Stereotype;
@@ -155,14 +155,6 @@ public class SkinParam implements ISkinParam {
 		return result;
 	}
 
-	static public void setBetaStyle(boolean betastyle) {
-		USE_STYLE2.set(betastyle);
-	}
-
-	public static int zeroMargin(int defaultValue) {
-		return defaultValue;
-	}
-
 	private static final String stereoPatternString = "\\<\\<(.*?)\\>\\>";
 	private static final Pattern2 stereoPattern = MyPattern.cmpile(stereoPatternString);
 
@@ -183,8 +175,7 @@ public class SkinParam implements ISkinParam {
 		for (String key2 : cleanForKey(key)) {
 			params.put(key2, StringUtils.trin(value));
 			if (key2.startsWith("usebetastyle")) {
-				final boolean betastyle = "true".equalsIgnoreCase(value);
-				setBetaStyle(betastyle);
+				USE_STYLE2.set("true".equalsIgnoreCase(value));
 			}
 			if (USE_STYLES()) {
 				final FromSkinparamToStyle convertor = new FromSkinparamToStyle(key2, value, getCurrentStyleBuilder());
@@ -271,12 +262,9 @@ public class SkinParam implements ISkinParam {
 		return result;
 	}
 
-	public HColor getBackgroundColor(boolean replaceTransparentByWhite) {
+	public HColor getBackgroundColor() {
 		final HColor result = getHtmlColor(ColorParam.background, null, false);
 		if (result == null) {
-			return HColorUtils.WHITE;
-		}
-		if (replaceTransparentByWhite && HColorUtils.transparent().equals(result)) {
 			return HColorUtils.WHITE;
 		}
 		return result;
@@ -321,9 +309,8 @@ public class SkinParam implements ISkinParam {
 		if (value == null) {
 			return null;
 		}
-		if ((param == ColorParam.background || param == ColorParam.arrowHead)
-				&& (value.equalsIgnoreCase("transparent") || value.equalsIgnoreCase("none"))) {
-			return HColorUtils.transparent();
+		if (param == ColorParam.background && value.equalsIgnoreCase("transparent")) {
+			return null;
 		}
 		if (param == ColorParam.background) {
 			return getIHtmlColorSet().getColorIfValid(value);
@@ -331,7 +318,7 @@ public class SkinParam implements ISkinParam {
 		assert param != ColorParam.background;
 //		final boolean acceptTransparent = param == ColorParam.background
 //				|| param == ColorParam.sequenceGroupBodyBackground || param == ColorParam.sequenceBoxBackground;
-		return getIHtmlColorSet().getColorIfValid(value, getBackgroundColor(false));
+		return getIHtmlColorSet().getColorIfValid(value, getBackgroundColor());
 	}
 
 	public char getCircledCharacter(Stereotype stereotype) {
@@ -779,6 +766,15 @@ public class SkinParam implements ISkinParam {
 		return true;
 	}
 
+	public PackageStyle getPackageStyle() {
+		final String value = getValue("packageStyle");
+		final PackageStyle p = PackageStyle.fromString(value);
+		if (p == null) {
+			return PackageStyle.FOLDER;
+		}
+		return p;
+	}
+
 	private final Map<String, Sprite> sprites = new HashMap<String, Sprite>();
 
 	public Collection<String> getAllSpriteNames() {
@@ -797,27 +793,12 @@ public class SkinParam implements ISkinParam {
 		return result;
 	}
 
-	public PackageStyle packageStyle() {
-		final String value = getValue("packageStyle");
-		final PackageStyle p = PackageStyle.fromString(value);
-		if (p == null) {
-			return PackageStyle.FOLDER;
-		}
-		return p;
-	}
-
-	public ComponentStyle componentStyle() {
+	public boolean useUml2ForComponent() {
 		if (strictUmlStyle()) {
-			return ComponentStyle.UML2;
+			return true;
 		}
 		final String value = getValue("componentstyle");
-		if ("uml1".equalsIgnoreCase(value))
-			return ComponentStyle.UML1;
-		if ("uml2".equalsIgnoreCase(value))
-			return ComponentStyle.UML2;
-		if ("rectangle".equalsIgnoreCase(value))
-			return ComponentStyle.RECTANGLE;
-		return ComponentStyle.UML2;
+		return "uml2".equalsIgnoreCase(value);
 	}
 
 	public boolean stereotypePositionTop() {
@@ -1087,7 +1068,7 @@ public class SkinParam implements ISkinParam {
 	public String getMonospacedFamily() {
 		final String value = getValue("defaultMonospacedFontName");
 		if (value == null) {
-			return Parser.MONOSPACED;
+			return CommandCreoleMonospaced.MONOSPACED;
 		}
 		return value;
 	}
@@ -1145,7 +1126,7 @@ public class SkinParam implements ISkinParam {
 		return type;
 	}
 
-	public HColor hoverPathColor() {
+	public HColor getHoverPathColor() {
 		final String value = getValue("pathhovercolor");
 		if (value == null) {
 			return null;
@@ -1220,7 +1201,7 @@ public class SkinParam implements ISkinParam {
 		return useVizJs;
 	}
 
-	public Padder sequenceDiagramPadder() {
+	public Padder getSequenceDiagramPadder() {
 		final double padding = getAsDouble("SequenceMessagePadding");
 		final double margin = getAsDouble("SequenceMessageMargin");
 		final String borderColor = getValue("SequenceMessageBorderColor");
@@ -1235,7 +1216,7 @@ public class SkinParam implements ISkinParam {
 				.withBorderColor(border).withRoundCorner(roundCorner);
 	}
 
-	public ActorStyle actorStyle() {
+	public ActorStyle getActorStyle() {
 		final String value = getValue("actorstyle");
 		if ("awesome".equalsIgnoreCase(value)) {
 			return ActorStyle.AWESOME;

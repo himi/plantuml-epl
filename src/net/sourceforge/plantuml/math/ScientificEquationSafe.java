@@ -42,6 +42,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 
+import javax.imageio.ImageIO;
+
 import net.sourceforge.plantuml.FileFormat;
 import net.sourceforge.plantuml.FileFormatOption;
 import net.sourceforge.plantuml.Log;
@@ -51,10 +53,6 @@ import net.sourceforge.plantuml.core.ImageData;
 import net.sourceforge.plantuml.eps.EpsGraphics;
 import net.sourceforge.plantuml.graphic.GraphicStrings;
 import net.sourceforge.plantuml.graphic.TextBlock;
-import net.sourceforge.plantuml.security.ImageIO;
-import net.sourceforge.plantuml.ugraphic.AffineTransformType;
-import net.sourceforge.plantuml.ugraphic.MutableImage;
-import net.sourceforge.plantuml.ugraphic.PixelImage;
 import net.sourceforge.plantuml.ugraphic.ImageBuilder;
 import net.sourceforge.plantuml.ugraphic.color.ColorMapperIdentity;
 
@@ -91,6 +89,7 @@ public class ScientificEquationSafe {
 	private ImageData dimSvg;
 
 	public SvgString getSvg(double scale, Color foregroundColor, Color backgroundColor) {
+
 		try {
 			final SvgString svg = equation.getSvg(scale, foregroundColor, backgroundColor);
 			dimSvg = new ImageDataSimple(equation.getDimension());
@@ -108,17 +107,16 @@ public class ScientificEquationSafe {
 		}
 	}
 
-	public MutableImage getImage(Color foregroundColor, Color backgroundColor) {
+	public BufferedImage getImage(double scale, Color foregroundColor, Color backgroundColor) {
 		try {
-			return equation.getImage(foregroundColor, backgroundColor);
+			return equation.getImage(scale, foregroundColor, backgroundColor);
 		} catch (Exception e) {
 			printTrace(e);
 			final ImageBuilder imageBuilder = getRollback();
 			final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			try {
 				imageBuilder.writeImageTOBEMOVED(new FileFormatOption(FileFormat.PNG), 42, baos);
-				return new PixelImage(ImageIO.read(new ByteArrayInputStream(baos.toByteArray())),
-						AffineTransformType.TYPE_BILINEAR);
+				return ImageIO.read(new ByteArrayInputStream(baos.toByteArray()));
 			} catch (IOException e1) {
 				return null;
 			}
@@ -135,8 +133,8 @@ public class ScientificEquationSafe {
 
 	private ImageBuilder getRollback() {
 		final TextBlock block = GraphicStrings.createBlackOnWhiteMonospaced(Arrays.asList(formula));
-		final ImageBuilder imageBuilder = ImageBuilder.buildA(new ColorMapperIdentity(), false, null, null, null, 1.0,
-				null);
+		final ImageBuilder imageBuilder = new ImageBuilder(new ColorMapperIdentity(), 1.0, null, null, null, 0, 0,
+				null, false);
 		imageBuilder.setUDrawable(block);
 		return imageBuilder;
 	}
@@ -144,7 +142,7 @@ public class ScientificEquationSafe {
 	public ImageData export(OutputStream os, FileFormatOption fileFormat, float scale, Color foregroundColor,
 			Color backgroundColor) throws IOException {
 		if (fileFormat.getFileFormat() == FileFormat.PNG) {
-			final BufferedImage image = getImage(foregroundColor, backgroundColor).withScale(scale).getImage();
+			final BufferedImage image = getImage(scale, foregroundColor, backgroundColor);
 			ImageIO.write(image, "png", os);
 			return new ImageDataSimple(image.getWidth(), image.getHeight());
 		}
@@ -153,7 +151,7 @@ public class ScientificEquationSafe {
 			return dimSvg;
 		}
 		if (fileFormat.getFileFormat() == FileFormat.EPS) {
-			final BufferedImage image = getImage(foregroundColor, backgroundColor).withScale(scale).getImage();
+			final BufferedImage image = getImage(scale, foregroundColor, backgroundColor);
 			final EpsGraphics out = new EpsGraphics();
 			out.drawImage(image, 0, 0);
 			out.close();

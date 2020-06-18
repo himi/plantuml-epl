@@ -34,60 +34,60 @@
  */
 package net.sourceforge.plantuml;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import net.sourceforge.plantuml.security.SFile;
-
 public class AFileZipEntry implements AFile {
 
-	private final SFile zipFile;
+	private final File zipFile;
 	private final String entry;
 
-	public AFileZipEntry(SFile file, String entry) {
+	public AFileZipEntry(File file, String entry) {
 		this.zipFile = file;
 		this.entry = entry;
 	}
 
 	@Override
 	public String toString() {
-		return "AFileZipEntry::" + zipFile.getAbsolutePath() + " " + entry;
+		return "AFileZipEntry::" + zipFile + " " + entry;
 	}
 
-	public InputStream openFile() {
-		final InputStream tmp = zipFile.openFile();
-		if (tmp != null)
-			try {
-				final ZipInputStream zis = new ZipInputStream(tmp);
-				ZipEntry ze = zis.getNextEntry();
+	public InputStream open() throws IOException {
+		final ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile));
+		ZipEntry ze = zis.getNextEntry();
 
-				while (ze != null) {
-					final String fileName = ze.getName();
-					if (ze.isDirectory()) {
-					} else if (fileName.trim().equalsIgnoreCase(entry.trim())) {
-						return zis;
-					}
-					ze = zis.getNextEntry();
-				}
-				zis.closeEntry();
-				zis.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+		while (ze != null) {
+			final String fileName = ze.getName();
+			if (ze.isDirectory()) {
+			} else if (fileName.trim().equalsIgnoreCase(entry.trim())) {
+				return zis;
 			}
-		return null;
+			ze = zis.getNextEntry();
+		}
+		zis.closeEntry();
+		zis.close();
+		throw new IOException();
 	}
 
 	public boolean isOk() {
 		if (zipFile.exists() && zipFile.isDirectory() == false) {
-			final InputStream is = openFile();
-			if (is != null) {
+			InputStream is = null;
+			try {
+				is = open();
+				return true;
+			} catch (IOException e) {
+				// e.printStackTrace();
+			} finally {
 				try {
-					is.close();
-					return true;
-				} catch (IOException e) {
-					e.printStackTrace();
+					if (is != null) {
+						is.close();
+					}
+				} catch (IOException e1) {
+					e1.printStackTrace();
 				}
 			}
 		}
@@ -112,11 +112,11 @@ public class AFileZipEntry implements AFile {
 		return new AParentFolderZip(zipFile, entry);
 	}
 
-	public SFile getUnderlyingFile() {
+	public File getUnderlyingFile() {
 		return zipFile;
 	}
 
-	public SFile getSystemFolder() throws IOException {
+	public File getSystemFolder() throws IOException {
 		return zipFile.getParentFile().getCanonicalFile();
 	}
 

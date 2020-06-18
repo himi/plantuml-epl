@@ -77,7 +77,7 @@ public abstract class AbstractComponentRoseArrow extends AbstractTextualComponen
 	@Override
 	final protected TextBlock getTextBlock() {
 		final Padder padder = getISkinSimple() instanceof ISkinParam ? ((ISkinParam) getISkinSimple())
-				.sequenceDiagramPadder() : Padder.NONE;
+				.getSequenceDiagramPadder() : Padder.NONE;
 
 		return padder.apply(super.getTextBlock());
 	}

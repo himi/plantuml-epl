@@ -34,6 +34,7 @@
  */
 package net.sourceforge.plantuml.style;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -47,7 +48,6 @@ import net.sourceforge.plantuml.command.regex.IRegex;
 import net.sourceforge.plantuml.command.regex.RegexConcat;
 import net.sourceforge.plantuml.command.regex.RegexLeaf;
 import net.sourceforge.plantuml.command.regex.RegexResult;
-import net.sourceforge.plantuml.security.SFile;
 
 public class CommandStyleImport extends SingleLineCommand2<UmlDiagram> {
 
@@ -74,7 +74,7 @@ public class CommandStyleImport extends SingleLineCommand2<UmlDiagram> {
 	protected CommandExecutionResult executeArg(UmlDiagram diagram, LineLocation location, RegexResult arg) {
 		final String path = arg.get("PATH", 0);
 		try {
-			final SFile f = FileSystem.getInstance().getFile(path);
+			final File f = FileSystem.getInstance().getFile(path);
 			BlocLines lines = null;
 			if (f.exists()) {
 				lines = BlocLines.load(f, location);
@@ -85,14 +85,14 @@ public class CommandStyleImport extends SingleLineCommand2<UmlDiagram> {
 				}
 			}
 			if (lines == null) {
-				return CommandExecutionResult.error("Cannot read: " + path);
+				return CommandExecutionResult.error("File does not exist: " + path);
 			}
 			final StyleBuilder styleBuilder = diagram.getSkinParam().getCurrentStyleBuilder();
 			for (Style modifiedStyle : StyleLoader.getDeclaredStyles(lines, styleBuilder)) {
 				diagram.getSkinParam().muteStyle(modifiedStyle);
 			}
 		} catch (IOException e) {
-			return CommandExecutionResult.error("Cannot read: " + path);
+			return CommandExecutionResult.error("File does not exist: " + path);
 		}
 		return CommandExecutionResult.ok();
 	}

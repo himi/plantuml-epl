@@ -74,11 +74,6 @@ public class GroupRoot implements IGroup {
 		return Collections.unmodifiableCollection(result);
 
 	}
-	
-	@Override
-	public String toString() {
-		return "ROOT";
-	}
 
 	public boolean isGroup() {
 		return true;
@@ -288,10 +283,6 @@ public class GroupRoot implements IGroup {
 	}
 
 	public boolean isAloneAndUnlinked() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void setThisIsTogether() {
 		throw new UnsupportedOperationException();
 	}
 }

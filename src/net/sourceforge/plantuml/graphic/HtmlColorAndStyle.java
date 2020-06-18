@@ -46,34 +46,28 @@ import net.sourceforge.plantuml.ugraphic.color.HColorSet;
 
 public class HtmlColorAndStyle {
 
-	private final HColor arrowHeadColor;
-	private final HColor arrowColor;
+	private final HColor color;
 	private final LinkStyle style;
 
 	@Override
 	public String toString() {
-		return arrowColor + " " + style;
+		return color + " " + style;
 	}
 
-	public HtmlColorAndStyle(HColor color, HColor arrowHeadColor) {
-		this(color, LinkStyle.NORMAL(), arrowHeadColor);
+	public HtmlColorAndStyle(HColor color) {
+		this(color, LinkStyle.NORMAL());
 	}
 
-	public HtmlColorAndStyle(HColor arrowColor, LinkStyle style, HColor arrowHeadColor) {
-		if (arrowColor == null) {
+	public HtmlColorAndStyle(HColor color, LinkStyle style) {
+		if (color == null) {
 			throw new IllegalArgumentException();
 		}
-		this.arrowColor = arrowColor;
-		this.arrowHeadColor = arrowHeadColor == null ? arrowColor : arrowHeadColor;
+		this.color = color;
 		this.style = style;
 	}
 
-	public HColor getArrowColor() {
-		return arrowColor;
-	}
-
-	public HColor getArrowHeadColor() {
-		return arrowHeadColor;
+	public HColor getColor() {
+		return color;
 	}
 
 	public LinkStyle getStyle() {
@@ -85,14 +79,12 @@ public class HtmlColorAndStyle {
 	}
 
 	public static HtmlColorAndStyle build(ISkinParam skinParam, String definition) {
-		HColor arrowColor;
-		HColor arrowHeadColor = null;
+		HColor color;
 		if (SkinParam.USE_STYLES()) {
 			final Style style = getDefaultStyleDefinitionArrow().getMergedStyle(skinParam.getCurrentStyleBuilder());
-			arrowColor = style.value(PName.LineColor).asColor(skinParam.getIHtmlColorSet());
+			color = style.value(PName.LineColor).asColor(skinParam.getIHtmlColorSet());
 		} else {
-			arrowColor = Rainbow.build(skinParam).getColors().get(0).arrowColor;
-			arrowColor = Rainbow.build(skinParam).getColors().get(0).arrowHeadColor;
+			color = Rainbow.build(skinParam).getColors().get(0).color;
 		}
 		LinkStyle style = LinkStyle.NORMAL();
 		final HColorSet set = skinParam.getIHtmlColorSet();
@@ -104,10 +96,10 @@ public class HtmlColorAndStyle {
 			}
 			final HColor tmpColor = set.getColorIfValid(s);
 			if (tmpColor != null) {
-				arrowColor = tmpColor;
+				color = tmpColor;
 			}
 		}
-		return new HtmlColorAndStyle(arrowColor, style, arrowHeadColor);
+		return new HtmlColorAndStyle(color, style);
 	}
 
 }

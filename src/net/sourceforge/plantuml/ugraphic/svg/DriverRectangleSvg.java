@@ -36,6 +36,7 @@ package net.sourceforge.plantuml.ugraphic.svg;
 
 import java.awt.geom.Rectangle2D;
 
+import net.sourceforge.plantuml.StringUtils;
 import net.sourceforge.plantuml.svg.SvgGraphics;
 import net.sourceforge.plantuml.ugraphic.ClipContainer;
 import net.sourceforge.plantuml.ugraphic.UClip;
@@ -66,12 +67,12 @@ public class DriverRectangleSvg implements UDriver<SvgGraphics> {
 		final HColor back = param.getBackcolor();
 		if (back instanceof HColorGradient) {
 			final HColorGradient gr = (HColorGradient) back;
-			final String id = svg.createSvgGradient(mapper.toRGB(gr.getColor1()),
-					mapper.toRGB(gr.getColor2()), gr.getPolicy());
+			final String id = svg.createSvgGradient(StringUtils.getAsHtml(mapper.getMappedColor(gr.getColor1())),
+					StringUtils.getAsHtml(mapper.getMappedColor(gr.getColor2())), gr.getPolicy());
 			svg.setFillColor("url(#" + id + ")");
 			applyColor(svg, mapper, param);
 		} else {
-			final String backcolor = mapper.toSvg(back);
+			final String backcolor = StringUtils.getAsSvg(mapper, back);
 			svg.setFillColor(backcolor);
 			applyColor(svg, mapper, param);
 		}
@@ -96,11 +97,11 @@ public class DriverRectangleSvg implements UDriver<SvgGraphics> {
 		final HColor color = param.getColor();
 		if (color instanceof HColorGradient) {
 			final HColorGradient gr = (HColorGradient) color;
-			final String id = svg.createSvgGradient(mapper.toRGB(gr.getColor1()),
-					mapper.toRGB(gr.getColor2()), gr.getPolicy());
+			final String id = svg.createSvgGradient(StringUtils.getAsHtml(mapper.getMappedColor(gr.getColor1())),
+					StringUtils.getAsHtml(mapper.getMappedColor(gr.getColor2())), gr.getPolicy());
 			svg.setStrokeColor("url(#" + id + ")");
 		} else {
-			svg.setStrokeColor(mapper.toSvg(color));
+			svg.setStrokeColor(StringUtils.getAsSvg(mapper, color));
 		}
 	}
 }

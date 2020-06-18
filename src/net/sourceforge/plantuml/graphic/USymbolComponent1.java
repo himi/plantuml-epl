@@ -98,10 +98,9 @@ class USymbolComponent1 extends USymbol {
 	}
 
 	@Override
-	public TextBlock asBig(TextBlock title, HorizontalAlignment labelAlignment, TextBlock stereotype, double width,
-			double height, SymbolContext symbolContext, HorizontalAlignment stereoAlignment) {
-		return USymbol.COMPONENT2.asBig(title, labelAlignment, stereotype, width, height, symbolContext,
-				stereoAlignment);
+	public TextBlock asBig(final TextBlock title, HorizontalAlignment labelAlignment, final TextBlock stereotype,
+			final double width, final double height, final SymbolContext symbolContext, final HorizontalAlignment stereoAlignment) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

@@ -156,11 +156,9 @@ public class LanguageDescriptor {
 		keyword.add("allow_mixing");
 		keyword.add("allowmixing");
 		keyword.add("mainframe");
-		keyword.add("across");
+		keyword.add("accross");
 		keyword.add("stereotype");
 		keyword.add("split");
-		keyword.add("style");
-		keyword.add("sprite");
 
 		preproc.add("!exit");
 		preproc.add("!include");
@@ -174,19 +172,6 @@ public class LanguageDescriptor {
 		preproc.add("!else");
 		preproc.add("!definelong");
 		preproc.add("!enddefinelong");
-		preproc.add("!function");
-		preproc.add("!procedure");
-		preproc.add("!endfunction");
-		preproc.add("!endprocedure");
-		preproc.add("!unquoted");
-		preproc.add("!return");
-		preproc.add("!startsub");
-		preproc.add("!endsub");
-		preproc.add("!assert");
-		preproc.add("!log");
-		preproc.add("!local");
-		preproc.add("!dump_memory");
-		preproc.add("!import");
 	}
 
 	public Cypher getCypher() {

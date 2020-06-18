@@ -40,6 +40,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -75,10 +76,7 @@ import net.sourceforge.plantuml.graphic.TextBlock;
 import net.sourceforge.plantuml.graphic.TextBlockRaw;
 import net.sourceforge.plantuml.graphic.TextBlockUtils;
 import net.sourceforge.plantuml.graphic.VerticalAlignment;
-import net.sourceforge.plantuml.security.SecurityUtils;
 import net.sourceforge.plantuml.svek.TextBlockBackcolored;
-import net.sourceforge.plantuml.ugraphic.AffineTransformType;
-import net.sourceforge.plantuml.ugraphic.PixelImage;
 import net.sourceforge.plantuml.ugraphic.ImageBuilder;
 import net.sourceforge.plantuml.ugraphic.MinMax;
 import net.sourceforge.plantuml.ugraphic.UFont;
@@ -205,15 +203,15 @@ public abstract class PSystemError extends AbstractPSystem {
 			final UGraphicTxt ugt = new UGraphicTxt();
 			final UmlCharArea area = ugt.getCharArea();
 			area.drawStringsLR(getPureAsciiFormatted(), 0, 0);
-			area.print(SecurityUtils.createPrintStream(os));
+			area.print(new PrintStream(os));
 			return new ImageDataSimple(1, 1);
 
 		}
 		final TextBlockBackcolored result = getGraphicalFormatted();
 
 		TextBlock udrawable;
-		final ImageBuilder imageBuilder = ImageBuilder.buildA(new ColorMapperIdentity(), false, null, getMetadata(),
-				null, 1.0, result.getBackcolor());
+		final ImageBuilder imageBuilder = new ImageBuilder(new ColorMapperIdentity(), 1.0, result.getBackcolor(),
+				getMetadata(), null, 0, 0, null, false);
 		imageBuilder.setRandomPixel(true);
 		if (getSource().getTotalLineCount() < 5) {
 			udrawable = addWelcome(result);
@@ -303,8 +301,7 @@ public abstract class PSystemError extends AbstractPSystem {
 	}
 
 	private TextBlock addMessageArecibo(final TextBlock source) throws IOException {
-		final UImage message = new UImage(
-				new PixelImage(PSystemVersion.getArecibo(), AffineTransformType.TYPE_BILINEAR));
+		final UImage message = new UImage(PSystemVersion.getArecibo());
 		TextBlock result = TextBlockUtils.mergeLR(source, TextBlockUtils.fromUImage(message), VerticalAlignment.TOP);
 		return result;
 	}
@@ -326,8 +323,7 @@ public abstract class PSystemError extends AbstractPSystem {
 		if (qrcode == null) {
 			result = text;
 		} else {
-			final UImage qr = new UImage(
-					new PixelImage(qrcode, AffineTransformType.TYPE_NEAREST_NEIGHBOR)).scale(3);
+			final UImage qr = new UImage(qrcode).scaleNearestNeighbor(3);
 			result = TextBlockUtils.mergeLR(text, TextBlockUtils.fromUImage(qr), VerticalAlignment.CENTER);
 		}
 		return TextBlockUtils.addBackcolor(result, backColor);
@@ -351,9 +347,8 @@ public abstract class PSystemError extends AbstractPSystem {
 	}
 
 	private TextBlockBackcolored getMessagePatreon() {
-		final UImage message = new UImage(
-				new PixelImage(PSystemVersion.getTime01(), AffineTransformType.TYPE_BILINEAR));
-		final Color back = new Color(message.getImage(1).getRGB(0, 0));
+		final UImage message = new UImage(PSystemVersion.getTime01());
+		final Color back = new Color(message.getImage().getRGB(0, 0));
 		final HColor backColor = new HColorSimple(back, false);
 
 		final FlashCodeUtils utils = FlashCodeFactory.getFlashCodeUtils();
@@ -371,9 +366,7 @@ public abstract class PSystemError extends AbstractPSystem {
 				if (qrcode == null) {
 					ug.apply(new UTranslate(1, 1)).draw(message);
 				} else {
-					final UImage qr = new UImage(
-							new PixelImage(qrcode, AffineTransformType.TYPE_NEAREST_NEIGHBOR))
-									.scale(scale);
+					final UImage qr = new UImage(qrcode).scaleNearestNeighbor(scale);
 					ug.apply(new UTranslate(1, (imHeight - message.getHeight()) / 2)).draw(message);
 					ug.apply(new UTranslate(1 + message.getWidth(), (imHeight - qr.getHeight()) / 2)).draw(qr);
 				}
@@ -399,9 +392,8 @@ public abstract class PSystemError extends AbstractPSystem {
 	}
 
 	private TextBlockBackcolored getMessageLiberapay() {
-		final UImage message = new UImage(
-				new PixelImage(PSystemVersion.getTime15(), AffineTransformType.TYPE_BILINEAR));
-		final Color back = new Color(message.getImage(1).getRGB(0, 0));
+		final UImage message = new UImage(PSystemVersion.getTime15());
+		final Color back = new Color(message.getImage().getRGB(0, 0));
 		final HColor backColor = new HColorSimple(back, false);
 
 		final FlashCodeUtils utils = FlashCodeFactory.getFlashCodeUtils();
@@ -418,9 +410,7 @@ public abstract class PSystemError extends AbstractPSystem {
 				if (qrcode == null) {
 					ug.apply(new UTranslate(1, 1)).draw(message);
 				} else {
-					final UImage qr = new UImage(
-							new PixelImage(qrcode, AffineTransformType.TYPE_NEAREST_NEIGHBOR))
-									.scale(scale);
+					final UImage qr = new UImage(qrcode).scaleNearestNeighbor(scale);
 					ug.apply(new UTranslate(1, (imHeight - message.getHeight()) / 2)).draw(message);
 					ug.apply(new UTranslate(1 + message.getWidth(), (imHeight - qr.getHeight()) / 2)).draw(qr);
 				}

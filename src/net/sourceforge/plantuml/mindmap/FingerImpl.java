@@ -60,6 +60,7 @@ import net.sourceforge.plantuml.style.SName;
 import net.sourceforge.plantuml.style.Style;
 import net.sourceforge.plantuml.style.StyleBuilder;
 import net.sourceforge.plantuml.style.StyleSignature;
+import net.sourceforge.plantuml.ugraphic.UChangeColor;
 import net.sourceforge.plantuml.ugraphic.UFont;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.UPath;
@@ -78,10 +79,7 @@ public class FingerImpl implements Finger, UDrawable {
 	private final Direction direction;
 	private final int level;
 	private boolean drawPhalanx = true;
-	private double marginLeft = 10;
-	private double marginRight = 10;
-	private double marginTop = 10;
-	private double marginBottom = 10;
+	private double margin = 10;
 
 	private final List<FingerImpl> nail = new ArrayList<FingerImpl>();
 	private Tetris tetris = null;
@@ -131,10 +129,7 @@ public class FingerImpl implements Finger, UDrawable {
 		this.styleBuilder = styleBuilder;
 		this.direction = direction;
 		final Style styleNode = getDefaultStyleDefinitionNode().getMergedStyle(styleBuilder);
-		this.marginLeft = styleNode.getMargin().getLeft();
-		this.marginRight = styleNode.getMargin().getRight();
-		this.marginTop = styleNode.getMargin().getTop();
-		this.marginBottom = styleNode.getMargin().getBottom();
+		this.margin = styleNode.getMargin().asDouble();
 	}
 
 	public void drawU(final UGraphic ug) {
@@ -146,17 +141,17 @@ public class FingerImpl implements Finger, UDrawable {
 			final double posX = direction == Direction.RIGHT ? 0 : -dimPhalanx.getWidth();
 			phalanx.drawU(ug.apply(new UTranslate(posX, posY)));
 		}
-		final Point2D p1 = new Point2D.Double(
-				direction == Direction.RIGHT ? dimPhalanx.getWidth() : -dimPhalanx.getWidth(), 0);
+		final Point2D p1 = new Point2D.Double(direction == Direction.RIGHT ? dimPhalanx.getWidth()
+				: -dimPhalanx.getWidth(), 0);
 
 		for (int i = 0; i < nail.size(); i++) {
 			final FingerImpl child = nail.get(i);
 			final SymetricalTeePositioned stp = tetris(stringBounder).getElements().get(i);
-			final double x = direction == Direction.RIGHT ? dimPhalanx.getWidth() + getX12()
-					: -dimPhalanx.getWidth() - getX12();
+			final double x = direction == Direction.RIGHT ? dimPhalanx.getWidth() + getX12() : -dimPhalanx.getWidth()
+					- getX12();
 			final Point2D p2 = new Point2D.Double(x, stp.getY());
 			child.drawU(ug.apply(new UTranslate(p2)));
-			drawLine(ug.apply(getLinkColor()).apply(getUStroke()), p1, p2);
+			drawLine(ug.apply(new UChangeColor(getLinkColor())).apply(getUStroke()), p1, p2);
 		}
 
 	}
@@ -215,11 +210,11 @@ public class FingerImpl implements Finger, UDrawable {
 	}
 
 	private double getX1() {
-		return marginLeft;
+		return margin();
 	}
 
 	private double getX2() {
-		return marginRight + 30;
+		return margin() + 30;
 	}
 
 	public double getX12() {
@@ -246,11 +241,10 @@ public class FingerImpl implements Finger, UDrawable {
 			font = skinParam.getFont(null, false, FontParam.ACTIVITY);
 		}
 		if (shape == IdeaShape.BOX) {
-			// final ISkinParam foo = new
-			// SkinParamBackcolored(Colors.empty().mute(skinParam), backColor);
+			// final ISkinParam foo = new SkinParamBackcolored(Colors.empty().mute(skinParam), backColor);
 			final ISkinParam foo = new SkinParamColors(skinParam, Colors.empty().add(ColorType.BACK, backColor));
 			final FtileBox box = FtileBox.createMindMap(styleBuilder, foo, label, getDefaultStyleDefinitionNode());
-			return TextBlockUtils.withMargin(box, 0, 0, marginTop, marginBottom);
+			return TextBlockUtils.withMargin(box, 0, 0, margin(), margin());
 		}
 
 		final TextBlock text = label.create(FontConfiguration.blackBlueTrue(font), HorizontalAlignment.LEFT, skinParam);
@@ -258,6 +252,10 @@ public class FingerImpl implements Finger, UDrawable {
 			return TextBlockUtils.withMargin(text, 3, 0, 1, 1);
 		}
 		return TextBlockUtils.withMargin(text, 0, 3, 1, 1);
+	}
+
+	private double margin() {
+		return margin;
 	}
 
 	public double getNailThickness(StringBounder stringBounder) {

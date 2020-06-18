@@ -158,9 +158,6 @@ public class FromSkinparamToStyle {
 		addConvert("legendBorderRoundCorner", PName.RoundCorner, SName.legend);
 		addConFont("legend", SName.legend);
 		addConvert("noteTextAlignment", PName.HorizontalAlignment, SName.note);
-		
-		addConvert("BackgroundColor", PName.BackGroundColor, SName.document);
-
 
 	}
 

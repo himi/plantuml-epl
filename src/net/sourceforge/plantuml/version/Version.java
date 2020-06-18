@@ -34,16 +34,15 @@
  */
 package net.sourceforge.plantuml.version;
 
+import java.net.URL;
 import java.util.Date;
-
-import net.sourceforge.plantuml.security.SURL;
 
 public class Version {
 
 	private static final int MAJOR_SEPARATOR = 1000000;
 
 	public static int version() {
-		return 1202013;
+		return 1202006;
 	}
 
 	public static int versionPatched() {
@@ -92,7 +91,7 @@ public class Version {
 	}
 
 	public static long compileTime() {
-		return 1592051198896L;
+		return 1586090312827L;
 	}
 
 	public static String compileTimeString() {
@@ -108,7 +107,7 @@ public class Version {
 			if (loader == null) {
 				return "No ClassLoader?";
 			}
-			final SURL url = SURL.create(loader.getResource("net/sourceforge/plantuml/version/Version.class"));
+			final URL url = loader.getResource("net/sourceforge/plantuml/version/Version.class");
 			if (url == null) {
 				return "No URL?";
 			}

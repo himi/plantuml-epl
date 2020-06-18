@@ -48,6 +48,8 @@ import net.sourceforge.plantuml.skin.AbstractTextualComponent;
 import net.sourceforge.plantuml.skin.Area;
 import net.sourceforge.plantuml.style.PName;
 import net.sourceforge.plantuml.style.Style;
+import net.sourceforge.plantuml.ugraphic.UChangeBackColor;
+import net.sourceforge.plantuml.ugraphic.UChangeColor;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.ULine;
 import net.sourceforge.plantuml.ugraphic.URectangle;
@@ -88,7 +90,7 @@ public class ComponentRoseDivider extends AbstractTextualComponent {
 	protected void drawInternalU(UGraphic ug, Area area) {
 		final Dimension2D dimensionToUse = area.getDimensionToUse();
 
-		ug = ug.apply(background.bg());
+		ug = ug.apply(new UChangeBackColor(background));
 		if (empty) {
 			drawSep(ug.apply(UTranslate.dy(dimensionToUse.getHeight() / 2)), dimensionToUse.getWidth());
 		} else {
@@ -102,7 +104,7 @@ public class ComponentRoseDivider extends AbstractTextualComponent {
 
 			drawSep(ug.apply(UTranslate.dy(dimensionToUse.getHeight() / 2)), dimensionToUse.getWidth());
 
-			ug = ug.apply(borderColor);
+			ug = ug.apply(new UChangeColor(borderColor));
 			ug = ug.apply(stroke);
 			final URectangle rect = new URectangle(textWidth + deltaX, textHeight).rounded(roundCorner);
 			if (withShadow) {
@@ -117,7 +119,7 @@ public class ComponentRoseDivider extends AbstractTextualComponent {
 	}
 
 	private void drawSep(UGraphic ug, double width) {
-		ug = ug.apply(background);
+		ug = ug.apply(new UChangeColor(background));
 		drawRectLong(ug.apply(UTranslate.dy(-1)), width);
 		drawDoubleLine(ug, width);
 	}
@@ -132,7 +134,7 @@ public class ComponentRoseDivider extends AbstractTextualComponent {
 	}
 
 	private void drawDoubleLine(UGraphic ug, final double width) {
-		ug = ug.apply(new UStroke(stroke.getThickness() / 2)).apply(borderColor);
+		ug = ug.apply(new UStroke(stroke.getThickness() / 2)).apply(new UChangeColor(borderColor));
 		final ULine line = ULine.hline(width);
 		ug.apply(UTranslate.dy(-1)).draw(line);
 		ug.apply(UTranslate.dy(2)).draw(line);

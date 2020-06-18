@@ -64,7 +64,7 @@ import net.sourceforge.plantuml.ugraphic.ULine;
 import net.sourceforge.plantuml.ugraphic.UTranslate;
 import net.sourceforge.plantuml.ugraphic.color.HColor;
 
-public class Ribbon implements PDrawing {
+public class Ribbon implements PlayerDrawing {
 
 	private final List<ChangeState> changes = new ArrayList<ChangeState>();
 	private final List<TimeConstraint> constraints = new ArrayList<TimeConstraint>();
@@ -74,18 +74,11 @@ public class Ribbon implements PDrawing {
 	private String initialState;
 	private Colors initialColors;
 	private final List<TimingNote> notes;
-	private final boolean compact;
-	private final TextBlock title;
-	private final int suggestedHeight;
 
-	public Ribbon(TimingRuler ruler, ISkinParam skinParam, List<TimingNote> notes, boolean compact, TextBlock title,
-			int suggestedHeight) {
-		this.suggestedHeight = suggestedHeight == 0 ? 24 : suggestedHeight;
-		this.compact = compact;
+	public Ribbon(TimingRuler ruler, ISkinParam skinParam, List<TimingNote> notes) {
 		this.ruler = ruler;
 		this.skinParam = skinParam;
 		this.notes = notes;
-		this.title = title;
 	}
 
 	public IntricatedPoint getTimeProjection(StringBounder stringBounder, TimeTick tick) {
@@ -117,22 +110,16 @@ public class Ribbon implements PDrawing {
 		return display.create(getFontConfiguration(), HorizontalAlignment.LEFT, skinParam);
 	}
 
-	public TextBlock getPart1(double fullAvailableWidth) {
+	public TextBlock getPart1() {
+		if (initialState == null) {
+			return TextBlockUtils.empty(0, 0);
+		}
 		return new AbstractTextBlock() {
 			public void drawU(UGraphic ug) {
-				if (compact) {
-					final double titleHeight = title.calculateDimension(ug.getStringBounder()).getHeight();
-					final double dy = (getRibbonHeight() - titleHeight) / 2;
-					title.drawU(ug.apply(UTranslate.dy(dy)));
-				}
 			}
 
 			public Dimension2D calculateDimension(StringBounder stringBounder) {
-				double width = getInitialWidth(stringBounder);
-				if (compact) {
-					width += title.calculateDimension(stringBounder).getWidth() + 10;
-				}
-				return new Dimension2DDouble(width, getRibbonHeight());
+				return new Dimension2DDouble(getInitialWidth(stringBounder), getRibbonHeight());
 			}
 		};
 	}
@@ -155,10 +142,7 @@ public class Ribbon implements PDrawing {
 	}
 
 	private double getInitialWidth(final StringBounder stringBounder) {
-		if (initialState == null) {
-			return 0;
-		}
-		return createTextBlock(initialState).calculateDimension(stringBounder).getWidth() + 24;
+		return createTextBlock(initialState).calculateDimension(stringBounder).getWidth() + getRibbonHeight();
 	}
 
 	private void drawHexa(UGraphic ug, double len, ChangeState change) {
@@ -172,7 +156,7 @@ public class Ribbon implements PDrawing {
 	}
 
 	private double getRibbonHeight() {
-		return suggestedHeight;
+		return 24;
 	}
 
 	private void drawPentaB(UGraphic ug, double len, ChangeState change) {

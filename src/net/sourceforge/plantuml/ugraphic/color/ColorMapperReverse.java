@@ -36,7 +36,7 @@ package net.sourceforge.plantuml.ugraphic.color;
 
 import java.awt.Color;
 
-public class ColorMapperReverse extends AbstractColorMapper implements ColorMapper {
+public class ColorMapperReverse implements ColorMapper {
 
 	private final ColorOrder order;
 
@@ -44,7 +44,7 @@ public class ColorMapperReverse extends AbstractColorMapper implements ColorMapp
 		this.order = order;
 	}
 
-	public Color toColor(HColor color) {
+	public Color getMappedColor(HColor color) {
 		if (color == null) {
 			return null;
 		}

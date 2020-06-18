@@ -49,6 +49,8 @@ import net.sourceforge.plantuml.skin.AbstractTextualComponent;
 import net.sourceforge.plantuml.skin.Area;
 import net.sourceforge.plantuml.style.PName;
 import net.sourceforge.plantuml.style.Style;
+import net.sourceforge.plantuml.ugraphic.UChangeBackColor;
+import net.sourceforge.plantuml.ugraphic.UChangeColor;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.UPath;
 import net.sourceforge.plantuml.ugraphic.URectangle;
@@ -140,11 +142,11 @@ public class ComponentRoseGroupingHeader extends AbstractTextualComponent {
 			return;
 		}
 		final Dimension2D dimensionToUse = area.getDimensionToUse();
-		ug = symbolContext.applyStroke(ug).apply(symbolContext.getForeColor());
+		ug = symbolContext.applyStroke(ug).apply(new UChangeColor(symbolContext.getForeColor()));
 		final URectangle rect = new URectangle(dimensionToUse.getWidth(), dimensionToUse.getHeight())
 				.rounded(roundCorner);
 		rect.setDeltaShadow(symbolContext.getDeltaShadow());
-		ug.apply(background.bg()).draw(rect);
+		ug.apply(new UChangeBackColor(background)).draw(rect);
 	}
 
 	@Override
@@ -160,7 +162,7 @@ public class ComponentRoseGroupingHeader extends AbstractTextualComponent {
 			symbolContextCorner.applyColors(ug).draw(getCorner(textWidth, textHeight));
 		}
 
-		ug = symbolContext.applyStroke(ug).apply(symbolContext.getForeColor());
+		ug = symbolContext.applyStroke(ug).apply(new UChangeColor(symbolContext.getForeColor()));
 		final URectangle rect = new URectangle(dimensionToUse.getWidth(), dimensionToUse.getHeight())
 				.rounded(roundCorner);
 		ug.draw(rect);

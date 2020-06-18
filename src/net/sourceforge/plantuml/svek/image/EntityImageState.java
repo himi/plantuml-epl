@@ -56,6 +56,8 @@ import net.sourceforge.plantuml.graphic.color.ColorType;
 import net.sourceforge.plantuml.svek.AbstractEntityImage;
 import net.sourceforge.plantuml.svek.ShapeType;
 import net.sourceforge.plantuml.ugraphic.Shadowable;
+import net.sourceforge.plantuml.ugraphic.UChangeBackColor;
+import net.sourceforge.plantuml.ugraphic.UChangeColor;
 import net.sourceforge.plantuml.ugraphic.UEllipse;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.ULine;
@@ -115,7 +117,6 @@ public class EntityImageState extends AbstractEntityImage {
 	}
 
 	final public void drawU(UGraphic ug) {
-		ug.startGroup(getEntity().getIdent().toString("."));
 		if (url != null) {
 			ug.startUrl(url);
 		}
@@ -134,12 +135,12 @@ public class EntityImageState extends AbstractEntityImage {
 		if (classBorder == null) {
 			classBorder = SkinParamUtils.getColor(getSkinParam(), getStereo(), ColorParam.stateBorder);
 		}
-		ug = ug.apply(getStroke()).apply(classBorder);
+		ug = ug.apply(getStroke()).apply(new UChangeColor(classBorder));
 		HColor backcolor = getEntity().getColors(getSkinParam()).getColor(ColorType.BACK);
 		if (backcolor == null) {
 			backcolor = SkinParamUtils.getColor(getSkinParam(), getStereo(), ColorParam.stateBackground);
 		}
-		ug = ug.apply(backcolor.bg());
+		ug = ug.apply(new UChangeBackColor(backcolor));
 
 		ug.draw(rect);
 
@@ -163,9 +164,8 @@ public class EntityImageState extends AbstractEntityImage {
 		fields.drawU(ug.apply(new UTranslate(xFields, yFields)));
 
 		if (url != null) {
-			ug.closeUrl();
+			ug.closeAction();
 		}
-		ug.closeGroup();
 	}
 
 	private UStroke getStroke() {

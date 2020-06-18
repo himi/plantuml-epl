@@ -31,7 +31,6 @@
  * 
  *
  * Original Author:  Arnaud Roques
- * Contribution :  Hisashi Miyashita
  */
 package net.sourceforge.plantuml.cucadiagram;
 
@@ -101,8 +100,8 @@ public enum LinkDecor {
 	}
 
 	public ExtremityFactory getExtremityFactory(HColor backgroundColor) {
-		switch (this) {
-		case PLUS:
+        switch (this) {
+        case PLUS:
 			return new ExtremityFactoryPlus();
 		case REDEFINES:
 			return new ExtremityFactoryExtendsLike(backgroundColor, false);
@@ -144,8 +143,8 @@ public enum LinkDecor {
 			return new ExtremityFactoryParenthesis();
 		case CIRCLE_CONNECT:
 			return new ExtremityFactoryCircleConnect();
-		default:
-			return null;
-		}
+        default:
+            return null;
+        }
 	}
 }

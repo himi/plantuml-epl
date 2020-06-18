@@ -39,6 +39,7 @@ import java.util.List;
 
 import net.sourceforge.plantuml.Direction;
 import net.sourceforge.plantuml.ISkinSimple;
+import net.sourceforge.plantuml.OptionFlags;
 import net.sourceforge.plantuml.UmlDiagramType;
 import net.sourceforge.plantuml.core.DiagramDescription;
 import net.sourceforge.plantuml.cucadiagram.Code;

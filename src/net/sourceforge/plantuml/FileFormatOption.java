@@ -57,38 +57,13 @@ public final class FileFormatOption implements Serializable {
 	private final TikzFontDistortion tikzFontDistortion;
 	private final double scale;
 	private final String preserveAspectRatio;
-	private final String watermark;
 
 	public double getScaleCoef() {
 		return scale;
 	}
 
 	public FileFormatOption(FileFormat fileFormat) {
-		this(fileFormat, null, true, false, "_top", false, null, TikzFontDistortion.getDefault(), 1.0, "none", null);
-	}
-
-	public FileFormatOption(FileFormat fileFormat, boolean withMetadata) {
-		this(fileFormat, null, withMetadata, false, "_top", false, null, TikzFontDistortion.getDefault(), 1.0, "none",
-				null);
-	}
-
-	private FileFormatOption(FileFormat fileFormat, AffineTransform at, boolean withMetadata, boolean useRedForError,
-			String svgLinkTarget, boolean debugsvek, String hoverColor, TikzFontDistortion tikzFontDistortion,
-			double scale, String preserveAspectRatio, String watermark) {
-		this.hoverColor = hoverColor;
-		this.watermark = watermark;
-		this.fileFormat = fileFormat;
-		this.affineTransform = at;
-		this.withMetadata = withMetadata;
-		this.useRedForError = useRedForError;
-		this.svgLinkTarget = svgLinkTarget;
-		this.debugsvek = debugsvek;
-		this.tikzFontDistortion = tikzFontDistortion;
-		this.scale = scale;
-		this.preserveAspectRatio = preserveAspectRatio;
-		if (tikzFontDistortion == null) {
-			throw new IllegalArgumentException();
-		}
+		this(fileFormat, null, true, false, "_top", false, null, TikzFontDistortion.getDefault(), 1.0, "none");
 	}
 
 	public StringBounder getDefaultStringBounder() {
@@ -107,39 +82,56 @@ public final class FileFormatOption implements Serializable {
 		return preserveAspectRatio;
 	}
 
+	public FileFormatOption(FileFormat fileFormat, boolean withMetadata) {
+		this(fileFormat, null, withMetadata, false, "_top", false, null, TikzFontDistortion.getDefault(), 1.0, "none");
+	}
+
+	private FileFormatOption(FileFormat fileFormat, AffineTransform at, boolean withMetadata, boolean useRedForError,
+			String svgLinkTarget, boolean debugsvek, String hoverColor, TikzFontDistortion tikzFontDistortion,
+			double scale, String preserveAspectRatio) {
+		this.hoverColor = hoverColor;
+		this.fileFormat = fileFormat;
+		this.affineTransform = at;
+		this.withMetadata = withMetadata;
+		this.useRedForError = useRedForError;
+		this.svgLinkTarget = svgLinkTarget;
+		this.debugsvek = debugsvek;
+		this.tikzFontDistortion = tikzFontDistortion;
+		this.scale = scale;
+		this.preserveAspectRatio = preserveAspectRatio;
+		if (tikzFontDistortion == null) {
+			throw new IllegalArgumentException();
+		}
+	}
+
 	public FileFormatOption withUseRedForError() {
 		return new FileFormatOption(fileFormat, affineTransform, withMetadata, true, svgLinkTarget, debugsvek,
-				hoverColor, tikzFontDistortion, scale, preserveAspectRatio, watermark);
+				hoverColor, tikzFontDistortion, scale, preserveAspectRatio);
 	}
 
 	public FileFormatOption withTikzFontDistortion(TikzFontDistortion tikzFontDistortion) {
 		return new FileFormatOption(fileFormat, affineTransform, withMetadata, true, svgLinkTarget, debugsvek,
-				hoverColor, tikzFontDistortion, scale, preserveAspectRatio, watermark);
+				hoverColor, tikzFontDistortion, scale, preserveAspectRatio);
 	}
 
 	public FileFormatOption withSvgLinkTarget(String svgLinkTarget) {
-		return new FileFormatOption(fileFormat, affineTransform, withMetadata, useRedForError, svgLinkTarget, debugsvek,
-				hoverColor, tikzFontDistortion, scale, preserveAspectRatio, watermark);
+		return new FileFormatOption(fileFormat, affineTransform, withMetadata, useRedForError, svgLinkTarget,
+				debugsvek, hoverColor, tikzFontDistortion, scale, preserveAspectRatio);
 	}
 
 	public FileFormatOption withPreserveAspectRatio(String preserveAspectRatio) {
-		return new FileFormatOption(fileFormat, affineTransform, withMetadata, useRedForError, svgLinkTarget, debugsvek,
-				hoverColor, tikzFontDistortion, scale, preserveAspectRatio, watermark);
+		return new FileFormatOption(fileFormat, affineTransform, withMetadata, useRedForError, svgLinkTarget,
+				debugsvek, hoverColor, tikzFontDistortion, scale, preserveAspectRatio);
 	}
 
 	public FileFormatOption withHoverColor(String hoverColor) {
-		return new FileFormatOption(fileFormat, affineTransform, withMetadata, useRedForError, svgLinkTarget, debugsvek,
-				hoverColor, tikzFontDistortion, scale, preserveAspectRatio, watermark);
+		return new FileFormatOption(fileFormat, affineTransform, withMetadata, useRedForError, svgLinkTarget,
+				debugsvek, hoverColor, tikzFontDistortion, scale, preserveAspectRatio);
 	}
 
 	public FileFormatOption withScale(double scale) {
-		return new FileFormatOption(fileFormat, affineTransform, withMetadata, useRedForError, svgLinkTarget, debugsvek,
-				hoverColor, tikzFontDistortion, scale, preserveAspectRatio, watermark);
-	}
-
-	public FileFormatOption withWartermark(String watermark) {
-		return new FileFormatOption(fileFormat, affineTransform, withMetadata, useRedForError, svgLinkTarget, debugsvek,
-				hoverColor, tikzFontDistortion, scale, preserveAspectRatio, watermark);
+		return new FileFormatOption(fileFormat, affineTransform, withMetadata, useRedForError, svgLinkTarget,
+				debugsvek, hoverColor, tikzFontDistortion, scale, preserveAspectRatio);
 	}
 
 	@Override
@@ -179,10 +171,6 @@ public final class FileFormatOption implements Serializable {
 
 	public final TikzFontDistortion getTikzFontDistortion() {
 		return tikzFontDistortion;
-	}
-
-	public final String getWatermark() {
-		return watermark;
 	}
 
 }

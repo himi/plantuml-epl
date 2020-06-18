@@ -44,6 +44,7 @@ import net.sourceforge.plantuml.Dimension2DDouble;
 import net.sourceforge.plantuml.ISkinSimple;
 import net.sourceforge.plantuml.StringUtils;
 import net.sourceforge.plantuml.graphic.StringBounder;
+import net.sourceforge.plantuml.ugraphic.UChangeColor;
 import net.sourceforge.plantuml.ugraphic.UFont;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.color.HColorSet;
@@ -143,7 +144,7 @@ public class ElementTree extends AbstractElement {
 			yvar += h;
 			rows.add(yvar);
 		}
-		ug = ug.apply(HColorSet.instance().getColorIfValid("#888888"));
+		ug = ug.apply(new UChangeColor(HColorSet.instance().getColorIfValid("#888888")));
 		skeleton.draw(ug, 0, 0);
 		if (strategy != TableStrategy.DRAW_NONE) {
 			final Grid2 grid = new Grid2(rows, cols, strategy);

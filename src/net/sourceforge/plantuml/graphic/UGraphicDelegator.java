@@ -43,11 +43,12 @@ import net.sourceforge.plantuml.ugraphic.color.ColorMapper;
 public abstract class UGraphicDelegator implements UGraphic {
 
 	final private UGraphic ug;
-
+	
 	@Override
 	public String toString() {
 		return super.toString() + " " + getUg().toString();
 	}
+
 
 	public final boolean matchesProperty(String propertyName) {
 		return ug.matchesProperty(propertyName);
@@ -77,22 +78,14 @@ public abstract class UGraphicDelegator implements UGraphic {
 		ug.startUrl(url);
 	}
 
-	public void closeUrl() {
-		ug.closeUrl();
-	}
-
-	public void startGroup(String groupId) {
-		ug.startGroup(groupId);
-	}
-
-	public void closeGroup() {
-		ug.closeGroup();
+	public void closeAction() {
+		ug.closeAction();
 	}
 
 	protected UGraphic getUg() {
 		return ug;
 	}
-
+	
 	public void flushUg() {
 		ug.flushUg();
 	}

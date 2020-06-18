@@ -42,13 +42,14 @@ import net.sourceforge.plantuml.graphic.HorizontalAlignment;
 import net.sourceforge.plantuml.graphic.TextBlock;
 import net.sourceforge.plantuml.graphic.color.ColorType;
 import net.sourceforge.plantuml.graphic.color.Colors;
+import net.sourceforge.plantuml.ugraphic.UChangeBackColor;
+import net.sourceforge.plantuml.ugraphic.UChangeColor;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.ULine;
 import net.sourceforge.plantuml.ugraphic.URectangle;
 import net.sourceforge.plantuml.ugraphic.UStroke;
 import net.sourceforge.plantuml.ugraphic.UTranslate;
 import net.sourceforge.plantuml.ugraphic.color.HColor;
-import net.sourceforge.plantuml.ugraphic.color.HColorNone;
 import net.sourceforge.plantuml.ugraphic.color.HColorUtils;
 
 public class Highlight {
@@ -99,7 +100,7 @@ public class Highlight {
 	}
 
 	public void drawHighlightsBack(UGraphic ug, TimingRuler ruler, double height) {
-		ug = ug.apply(new HColorNone()).apply(getBackColor().bg());
+		ug = ug.apply(new UChangeColor(null)).apply(new UChangeBackColor(getBackColor()));
 		final double start = ruler.getPosInPixel(this.getTickFrom());
 		final double end = ruler.getPosInPixel(this.getTickTo());
 		final URectangle rect = new URectangle(end - start, height);
@@ -108,7 +109,7 @@ public class Highlight {
 
 	public void drawHighlightsLines(UGraphic ug, TimingRuler ruler, double height) {
 		ug = ug.apply(new UStroke(4, 4, 2));
-		ug = ug.apply(getLineColor());
+		ug = ug.apply(new UChangeColor(getLineColor()));
 		final ULine line = ULine.vline(height);
 		final double start = ruler.getPosInPixel(this.getTickFrom());
 		final double end = ruler.getPosInPixel(this.getTickTo());
